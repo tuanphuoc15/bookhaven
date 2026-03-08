@@ -292,3 +292,125 @@ transform:scale(1.05);
 opacity:1;
 transition:0.3s;
 }
+/* MOBILE OPTIMIZATION */
+.container,
+.container-fluid {
+padding-left: 14px;
+padding-right: 14px;
+}
+
+.table-responsive {
+border-radius: 10px;
+}
+
+@media (max-width: 992px) {
+.hero-banner {
+padding: 48px 0;
+margin-bottom: 24px;
+}
+
+.hero-banner h1 {
+font-size: 30px;
+line-height: 1.2;
+}
+
+.hero-banner p {
+font-size: 16px;
+margin: 12px 0 18px;
+}
+
+.banner-img {
+height: 280px;
+}
+
+.card img,
+.book-card img {
+height: 220px;
+}
+
+.navbar-brand {
+font-size: 20px;
+}
+}
+
+@media (max-width: 768px) {
+h1, h2, h3 {
+line-height: 1.25;
+}
+
+h2 {
+font-size: 1.5rem;
+}
+
+h3 {
+font-size: 1.25rem;
+}
+
+.banner-img {
+height: 220px;
+}
+
+.card img,
+.book-card img {
+height: 190px;
+}
+
+.text-danger {
+font-size: 16px;
+}
+
+.btn {
+padding-top: 0.5rem;
+padding-bottom: 0.5rem;
+}
+
+.mobile-actions {
+display: flex;
+flex-direction: column;
+gap: 8px;
+}
+
+.mobile-actions .btn {
+width: 100%;
+}
+
+.table {
+font-size: 0.92rem;
+}
+}
+
+@media (max-width: 576px) {
+body {
+font-size: 14px;
+}
+
+.hero-banner {
+padding: 36px 0;
+}
+
+.hero-banner h1 {
+font-size: 24px;
+}
+
+.hero-banner p {
+font-size: 14px;
+}
+
+.banner-img {
+height: 180px;
+}
+
+.card img,
+.book-card img {
+height: 170px;
+}
+
+.payment img {
+width: 38px;
+margin-right: 6px;
+}
+
+.footer {
+padding: 28px 0;
+}
+}
