@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 include __DIR__ . '/_bootstrap.php';
 require_admin_login();
 
@@ -10,6 +10,42 @@ $categories = [
     5 => 'Kinh doanh',
     6 => 'Triet ly',
 ];
+
+function handle_image_upload($file)
+{
+    if (!isset($file) || !isset($file['error']) || $file['error'] === UPLOAD_ERR_NO_FILE) {
+        return ['ok' => true, 'filename' => ''];
+    }
+
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        return ['ok' => false, 'message' => 'Upload that bai.'];
+    }
+
+    $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+    if (!in_array($extension, $allowed, true)) {
+        return ['ok' => false, 'message' => 'Chi chap nhan file jpg, jpeg, png, webp.'];
+    }
+
+    $imageInfo = @getimagesize($file['tmp_name']);
+    if ($imageInfo === false) {
+        return ['ok' => false, 'message' => 'File upload khong phai anh hop le.'];
+    }
+
+    $targetDir = realpath(__DIR__ . '/../assets/images/books');
+    if ($targetDir === false) {
+        return ['ok' => false, 'message' => 'Thu muc luu anh khong ton tai.'];
+    }
+
+    $newName = 'book_' . date('Ymd_His') . '_' . bin2hex(random_bytes(4)) . '.' . $extension;
+    $targetPath = $targetDir . DIRECTORY_SEPARATOR . $newName;
+
+    if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+        return ['ok' => false, 'message' => 'Khong the luu anh upload.'];
+    }
+
+    return ['ok' => true, 'filename' => $newName];
+}
 
 $action = $_GET['action'] ?? 'list';
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -36,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $price = (float)($_POST['price'] ?? 0);
         $description = trim($_POST['description'] ?? '');
         $image = trim($_POST['image'] ?? '');
+        $currentImage = trim($_POST['current_image'] ?? '');
         $categoryId = (int)($_POST['category_id'] ?? 0);
         $publishYear = (int)($_POST['publish_year'] ?? 0);
         $language = trim($_POST['language'] ?? '');
@@ -47,17 +84,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $action = $bookId > 0 ? 'edit' : 'create';
             $id = $bookId;
         } else {
-            if ($bookId > 0) {
-                $stmt = mysqli_prepare($conn, 'UPDATE books SET title=?, author=?, price=?, description=?, image=?, category_id=?, publish_year=?, language=?, pages=?, publisher=? WHERE id=?');
-                mysqli_stmt_bind_param($stmt, 'ssdssiisisi', $title, $author, $price, $description, $image, $categoryId, $publishYear, $language, $pages, $publisher, $bookId);
-                mysqli_stmt_execute($stmt);
+            $uploadResult = handle_image_upload($_FILES['image_file'] ?? null);
+            if (!$uploadResult['ok']) {
+                $error = $uploadResult['message'];
+                $action = $bookId > 0 ? 'edit' : 'create';
+                $id = $bookId;
             } else {
-                $stmt = mysqli_prepare($conn, 'INSERT INTO books(title, author, price, description, image, category_id, publish_year, language, pages, publisher) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-                mysqli_stmt_bind_param($stmt, 'ssdssiisis', $title, $author, $price, $description, $image, $categoryId, $publishYear, $language, $pages, $publisher);
-                mysqli_stmt_execute($stmt);
+                if ($uploadResult['filename'] !== '') {
+                    $image = $uploadResult['filename'];
+                } elseif ($image === '' && $currentImage !== '') {
+                    $image = $currentImage;
+                }
+
+                if ($bookId > 0) {
+                    $stmt = mysqli_prepare($conn, 'UPDATE books SET title=?, author=?, price=?, description=?, image=?, category_id=?, publish_year=?, language=?, pages=?, publisher=? WHERE id=?');
+                    mysqli_stmt_bind_param($stmt, 'ssdssiisisi', $title, $author, $price, $description, $image, $categoryId, $publishYear, $language, $pages, $publisher, $bookId);
+                    mysqli_stmt_execute($stmt);
+                } else {
+                    $stmt = mysqli_prepare($conn, 'INSERT INTO books(title, author, price, description, image, category_id, publish_year, language, pages, publisher) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+                    mysqli_stmt_bind_param($stmt, 'ssdssiisis', $title, $author, $price, $description, $image, $categoryId, $publishYear, $language, $pages, $publisher);
+                    mysqli_stmt_execute($stmt);
+                }
+                header('Location: books.php');
+                exit();
             }
-            header('Location: books.php');
-            exit();
         }
     }
 }
@@ -139,9 +189,10 @@ $books = mysqli_query($conn, 'SELECT id, title, author, price, category_id, imag
 <div class="card shadow-sm mb-4">
 <div class="card-body">
 <h5 class="mb-3"><?php echo $action === 'edit' ? 'Sua sach' : 'Them sach moi'; ?></h5>
-<form method="POST" class="row g-3">
+<form method="POST" class="row g-3" enctype="multipart/form-data">
 <input type="hidden" name="form_action" value="save">
 <input type="hidden" name="id" value="<?php echo (int)$book['id']; ?>">
+<input type="hidden" name="current_image" value="<?php echo e($book['image']); ?>">
 
 <div class="col-md-6">
 <label class="form-label">Tieu de</label>
@@ -179,9 +230,16 @@ $books = mysqli_query($conn, 'SELECT id, title, author, price, category_id, imag
 <label class="form-label">Ngon ngu</label>
 <input type="text" name="language" class="form-control" value="<?php echo e($book['language']); ?>">
 </div>
-<div class="col-12">
-<label class="form-label">Ten file anh (trong assets/images/books)</label>
-<input type="text" name="image" class="form-control" value="<?php echo e($book['image']); ?>">
+<div class="col-md-6">
+<label class="form-label">Upload anh sach (jpg, jpeg, png, webp)</label>
+<input type="file" name="image_file" class="form-control" accept=".jpg,.jpeg,.png,.webp,image/*">
+<?php if (!empty($book['image'])) { ?>
+<small class="text-muted">Anh hien tai: <?php echo e($book['image']); ?></small>
+<?php } ?>
+</div>
+<div class="col-md-6">
+<label class="form-label">Hoac nhap ten file anh co san</label>
+<input type="text" name="image" class="form-control" value="<?php echo e($book['image']); ?>" placeholder="vi du: book1.jpg">
 </div>
 <div class="col-12">
 <label class="form-label">Mo ta</label>
