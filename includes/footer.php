@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 if (!isset($basePath)) {
     $basePath = "";
 }
@@ -66,5 +66,22 @@ if (!isset($basePath)) {
 </div>
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function () {
+  const revealEls = document.querySelectorAll('.reveal-on-scroll');
+  if (!revealEls.length) return;
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  revealEls.forEach((el) => io.observe(el));
+})();
+</script>
 </body>
 </html>

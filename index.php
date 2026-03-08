@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include "includes/config.php";
 include "includes/header.php";
 
@@ -91,7 +91,7 @@ mysqli_stmt_execute($listStmt);
 $result = mysqli_stmt_get_result($listStmt);
 ?>
 
-<div class="container mt-3">
+<div class="container mt-3 reveal-on-scroll">
 <div id="bannerSlider" class="carousel slide" data-bs-ride="carousel">
 <div class="carousel-inner">
 <div class="carousel-item active"><img src="assets/images/banner/banner1.jpg" class="d-block w-100 banner-img" alt="Banner 1"></div>
@@ -103,7 +103,7 @@ $result = mysqli_stmt_get_result($listStmt);
 </div>
 </div>
 
-<div class="hero-banner">
+<div class="hero-banner reveal-on-scroll">
 <div class="container text-center">
 <h1>Khám phá thế giới tri thức</h1>
 <p>Hơn 100+ cuốn sách phát triển bản thân và truyền cảm hứng</p>
@@ -120,7 +120,7 @@ $result = mysqli_stmt_get_result($listStmt);
 $bestSellerResult = mysqli_query($conn, "SELECT * FROM books ORDER BY price DESC LIMIT 4");
 while ($best = mysqli_fetch_assoc($bestSellerResult)) {
 ?>
-<div class="col-md-3">
+<div class="col-md-3 reveal-on-scroll">
 <div class="card shadow book-card position-relative">
 <span class="badge bg-danger bestseller-badge">Bán chạy</span>
 <img src="assets/images/books/<?php echo e($best['image']); ?>" class="card-img-top" alt="<?php echo e($best['title']); ?>">
@@ -135,10 +135,10 @@ while ($best = mysqli_fetch_assoc($bestSellerResult)) {
 <?php } ?>
 </div>
 
-<div class="card shadow-sm mt-4 mb-4">
+<div class="card shadow-sm mt-4 mb-4 reveal-on-scroll">
 <div class="card-body">
 <form method="GET" class="row g-2 align-items-end">
-<div class="col-md-3">
+<div class="col-md-3 reveal-on-scroll">
 <label class="form-label mb-1">Từ khóa</label>
 <input type="text" name="search" class="form-control" value="<?php echo e($search); ?>" placeholder="Nhập tên sách...">
 </div>
@@ -182,7 +182,7 @@ while ($best = mysqli_fetch_assoc($bestSellerResult)) {
 
 <div class="row">
 <?php while ($row = mysqli_fetch_assoc($result)) { ?>
-<div class="col-md-3">
+<div class="col-md-3 reveal-on-scroll">
 <div class="card shadow mb-4">
 <img src="assets/images/books/<?php echo e($row['image']); ?>" class="card-img-top" style="height:250px; object-fit:cover;" alt="<?php echo e($row['title']); ?>">
 <div class="card-body">
@@ -201,7 +201,7 @@ while ($best = mysqli_fetch_assoc($bestSellerResult)) {
 <div class="alert alert-warning">Không tìm thấy sách phù hợp bộ lọc.</div>
 <?php } ?>
 
-<nav>
+<nav class="reveal-on-scroll">
 <ul class="pagination justify-content-center">
 <?php
 $params = [];

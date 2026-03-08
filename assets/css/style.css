@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --bg: #f3f6fb;
   --surface: #ffffff;
   --surface-2: #eef4ff;
@@ -25,7 +25,7 @@ body {
     radial-gradient(circle at 0% 0%, #e5efff 0, transparent 40%),
     radial-gradient(circle at 100% 10%, #dbeafe 0, transparent 30%),
     var(--bg);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Be Vietnam Pro", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .container,
@@ -476,5 +476,49 @@ h5 {
   .bh-payment img {
     width: 42px;
     height: 28px;
+  }
+}
+
+/* UI POLISH 2 */
+.navbar .container {
+  min-height: 68px;
+}
+
+.card .card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card .card-body .btn {
+  min-width: 92px;
+}
+
+.card .card-body p {
+  margin-bottom: 4px;
+}
+
+.card .card-body .text-danger {
+  margin-bottom: 8px;
+}
+
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .card .card-body {
+    gap: 6px;
+  }
+
+  .card .card-body .btn {
+    width: 100%;
   }
 }
