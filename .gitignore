@@ -1,0 +1,20 @@
+.DS_Store
+Thumbs.db
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+
+# Dependencies
+vendor/
+node_modules/
+
+# Environment and local config
+.env
+.env.*
+!.env.example
+
+# Logs and runtime
+*.log
+*.tmp
