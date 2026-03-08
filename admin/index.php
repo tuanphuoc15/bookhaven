@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include __DIR__ . '/_bootstrap.php';
 require_admin_login();
 
@@ -26,7 +26,7 @@ $totalRevenue = (float) mysqli_fetch_assoc(mysqli_query($conn, $revenueQuery))['
 <div class="container-fluid px-4">
 <span class="navbar-brand mb-0 h1">BookHaven Admin</span>
 <div>
-<a class="btn btn-outline-light btn-sm me-2" href="orders.php">Quan ly don hang</a>
+<a class="btn btn-outline-light btn-sm me-2" href="orders.php">Quan ly don hang</a><a class="btn btn-outline-light btn-sm me-2" href="books.php">Quan ly sach</a>
 <a class="btn btn-outline-warning btn-sm" href="logout.php">Dang xuat</a>
 </div>
 </div>

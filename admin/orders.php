@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include __DIR__ . '/_bootstrap.php';
 require_admin_login();
 
@@ -42,7 +42,7 @@ $orders = mysqli_query($conn, $query);
 <div class="container-fluid px-4">
 <a class="navbar-brand" href="index.php">BookHaven Admin</a>
 <div>
-<a class="btn btn-outline-light btn-sm me-2" href="index.php">Dashboard</a>
+<a class="btn btn-outline-light btn-sm me-2" href="index.php">Dashboard</a><a class="btn btn-outline-light btn-sm me-2" href="books.php">Sach</a>
 <a class="btn btn-outline-warning btn-sm" href="logout.php">Dang xuat</a>
 </div>
 </div>
