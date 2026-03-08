@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -25,10 +25,11 @@ if (!isset($basePath)) {
 <span class="navbar-toggler-icon"></span>
 </button>
 <div class="collapse navbar-collapse" id="menu">
-<ul class="navbar-nav ms-auto">
+<ul class="navbar-nav ms-auto align-items-lg-center">
 <li class="nav-item"><a class="nav-link" href="<?php echo e($basePath); ?>index.php">Trang chủ</a></li>
 <li class="nav-item"><a class="nav-link" href="<?php echo e($basePath); ?>shop.php">Cửa hàng</a></li>
 <li class="nav-item"><a class="nav-link" href="<?php echo e($basePath); ?>cart/cart.php">Giỏ hàng</a></li>
+<li class="nav-item ms-lg-2"><a class="btn btn-light btn-sm" href="<?php echo e($basePath); ?>admin/login.php">Admin</a></li>
 </ul>
 </div>
 </div>
