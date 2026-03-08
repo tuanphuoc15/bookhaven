@@ -6,6 +6,9 @@ if (session_status() === PHP_SESSION_NONE) {
 if (!isset($basePath)) {
     $basePath = "";
 }
+
+$cssPath = __DIR__ . "/../assets/css/style.css";
+$cssVersion = file_exists($cssPath) ? (string) filemtime($cssPath) : "1";
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -14,7 +17,7 @@ if (!isset($basePath)) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BookHaven</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="<?php echo e($basePath); ?>assets/css/style.css">
+<link rel="stylesheet" href="<?php echo e($basePath); ?>assets/css/style.css?v=<?php echo e($cssVersion); ?>">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
