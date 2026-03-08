@@ -578,3 +578,140 @@ h5 {
     width: 100%;
   }
 }
+/* Home sections: Flash sale, tabs, reviews, faq */
+.flash-sale {
+  background: linear-gradient(135deg, #1f2f88 0%, #3b63ff 55%, #ff4d6d 100%);
+  border-radius: 18px;
+  padding: 20px;
+  color: #fff;
+  box-shadow: var(--shadow-md);
+}
+
+.flash-sale-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.flash-sale h3,
+.flash-sale h3 i {
+  color: #fff;
+}
+
+.flash-timer {
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+}
+
+.flash-card {
+  border: none;
+}
+
+.flash-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 5px 10px;
+  z-index: 3;
+}
+
+#catTabs .nav-link {
+  margin: 0 6px;
+  border-radius: 999px;
+  font-weight: 700;
+  color: #1f3b8f;
+  border: 1px solid #c8d8ff;
+}
+
+#catTabs .nav-link.active {
+  color: #fff;
+  background: linear-gradient(135deg, #2f49d1, #4d7cff);
+  border-color: transparent;
+}
+
+.review-card {
+  background: #fff;
+  border: 1px solid #e4e9ff;
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.review-thumb {
+  width: 48px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.review-book {
+  color: #1f3b8f;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.review-stars {
+  color: #f59e0b;
+  font-size: 14px;
+}
+
+.review-comment {
+  color: #3b4257;
+  font-size: 0.95rem;
+}
+
+.faq-home .accordion-item,
+.policy-card {
+  border: 1px solid #dbe4ff;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  box-shadow: 0 6px 18px rgba(39, 56, 106, 0.08);
+}
+
+.faq-home .accordion-button {
+  font-weight: 700;
+}
+
+.policy-page {
+  max-width: 980px;
+}
+
+.policy-card {
+  background: #fff;
+  padding: 16px 18px;
+}
+
+.policy-card h4 {
+  margin-bottom: 10px;
+}
+
+.policy-card ul,
+.policy-card ol {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .flash-sale {
+    padding: 16px;
+  }
+
+  .flash-sale-head {
+    align-items: flex-start;
+  }
+
+  #catTabs .nav-link {
+    margin: 4px;
+  }
+}

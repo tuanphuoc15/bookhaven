@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -36,6 +36,7 @@ $cssVersion = file_exists($cssPath) ? (string) filemtime($cssPath) : "1";
 <li class="nav-item"><a class="nav-link" href="<?php echo e($basePath); ?>shop.php">Cửa hàng</a></li>
 <li class="nav-item"><a class="nav-link" href="<?php echo e($basePath); ?>cart/cart.php">Giỏ hàng</a></li>
 <li class="nav-item"><a class="nav-link" href="<?php echo e($basePath); ?>my-orders.php">Đơn hàng</a></li>
+<li class="nav-item"><a class="nav-link" href="<?php echo e($basePath); ?>policy.php">Chính sách</a></li>
 </ul>
 </div>
 </div>

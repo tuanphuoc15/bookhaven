@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 if (!isset($basePath)) {
     $basePath = "";
 }
@@ -29,10 +29,10 @@ if (!isset($basePath)) {
 <div class="col-lg-3 col-md-6">
 <h6 class="bh-footer-title">Hỗ trợ khách hàng</h6>
 <ul class="bh-footer-links">
-<li><a href="#">Hướng dẫn mua hàng</a></li>
-<li><a href="#">Chính sách đổi trả</a></li>
-<li><a href="#">Điều khoản sử dụng</a></li>
-<li><a href="#">Chính sách bảo mật</a></li>
+<li><a href="<?php echo e($basePath); ?>policy.php#huong-dan">Hướng dẫn mua hàng</a></li>
+<li><a href="<?php echo e($basePath); ?>policy.php#doi-tra">Chính sách đổi trả</a></li>
+<li><a href="<?php echo e($basePath); ?>policy.php#dieu-khoan">Điều khoản sử dụng</a></li>
+<li><a href="<?php echo e($basePath); ?>policy.php#bao-mat">Chính sách bảo mật</a></li>
 </ul>
 <div class="bh-working-time">
 <p class="mb-1"><strong>Giờ hỗ trợ:</strong></p>

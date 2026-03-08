@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 include "includes/config.php";
 include "includes/header.php";
 
@@ -89,6 +89,31 @@ $listParams[] = $start;
 bind_dynamic_params($listStmt, $listTypes, $listParams);
 mysqli_stmt_execute($listStmt);
 $result = mysqli_stmt_get_result($listStmt);
+
+$flashResult = mysqli_query($conn, "SELECT id, title, author, image, price FROM books ORDER BY RAND() LIMIT 4");
+$categoriesForTabs = [
+    1 => 'Phát triển bản thân',
+    2 => 'Tâm lý học',
+    5 => 'Kinh doanh',
+    6 => 'Triết lý'
+];
+$tabData = [];
+foreach ($categoriesForTabs as $catId => $catName) {
+    $tabStmt = mysqli_prepare($conn, "SELECT id, title, author, image, price FROM books WHERE category_id = ? ORDER BY id DESC LIMIT 4");
+    mysqli_stmt_bind_param($tabStmt, "i", $catId);
+    mysqli_stmt_execute($tabStmt);
+    $tabData[$catId] = mysqli_stmt_get_result($tabStmt);
+}
+
+$reviewsSql = "
+  SELECT r.name, r.rating, r.comment, b.id AS book_id, b.title, b.image
+  FROM reviews r
+  JOIN books b ON b.id = r.book_id
+  ORDER BY r.id DESC
+  LIMIT 6
+";
+$featuredReviews = mysqli_query($conn, $reviewsSql);
+$hasReviews = $featuredReviews && mysqli_num_rows($featuredReviews) > 0;
 ?>
 
 <div class="container mt-3 reveal-on-scroll">
@@ -114,7 +139,64 @@ $result = mysqli_stmt_get_result($listStmt);
 <div class="container mt-4">
 <h2 class="text-center mb-4">BookHaven Online Bookstore</h2>
 
-<h3 class="text-center mt-5 mb-4">Sách bán chạy</h3>
+<div class="flash-sale reveal-on-scroll mb-5">
+<div class="flash-sale-head">
+<h3 class="mb-0"><i class="fa-solid fa-bolt"></i> Flash Sale Trong Ngày</h3>
+<div id="flashTimer" class="flash-timer">00:00:00</div>
+</div>
+<div class="row g-3 mt-1">
+<?php while ($flash = mysqli_fetch_assoc($flashResult)) {
+    $discountPercent = rand(10, 35);
+    $originPrice = (float)$flash['price'];
+    $salePrice = $originPrice * (100 - $discountPercent) / 100;
+?>
+<div class="col-md-3">
+<div class="card flash-card h-100">
+<span class="flash-badge">-<?php echo $discountPercent; ?>%</span>
+<img src="assets/images/books/<?php echo e($flash['image']); ?>" class="card-img-top" alt="<?php echo e($flash['title']); ?>">
+<div class="card-body">
+<h6 class="card-title"><?php echo e($flash['title']); ?></h6>
+<p class="mb-1 text-muted"><?php echo e($flash['author']); ?></p>
+<p class="mb-2"><span class="text-danger fw-bold"><?php echo number_format($salePrice); ?> VND</span> <small class="text-decoration-line-through text-muted"><?php echo number_format($originPrice); ?> VND</small></p>
+<a href="product-detail.php?id=<?php echo (int)$flash['id']; ?>" class="btn btn-primary btn-sm">Mua ngay</a>
+</div>
+</div>
+</div>
+<?php } ?>
+</div>
+</div>
+
+<h3 class="text-center mt-5 mb-4">Sách theo danh mục</h3>
+<ul class="nav nav-pills justify-content-center mb-3 reveal-on-scroll" id="catTabs" role="tablist">
+<?php $first = true; foreach ($categoriesForTabs as $catId => $catName) { ?>
+<li class="nav-item" role="presentation">
+<button class="nav-link <?php echo $first ? 'active' : ''; ?>" id="tab-<?php echo $catId; ?>" data-bs-toggle="pill" data-bs-target="#pane-<?php echo $catId; ?>" type="button" role="tab"><?php echo e($catName); ?></button>
+</li>
+<?php $first = false; } ?>
+</ul>
+<div class="tab-content reveal-on-scroll mb-5">
+<?php $first = true; foreach ($categoriesForTabs as $catId => $catName) { ?>
+<div class="tab-pane fade <?php echo $first ? 'show active' : ''; ?>" id="pane-<?php echo $catId; ?>" role="tabpanel">
+<div class="row g-3">
+<?php while ($rowCat = mysqli_fetch_assoc($tabData[$catId])) { ?>
+<div class="col-md-3">
+<div class="card h-100">
+<img src="assets/images/books/<?php echo e($rowCat['image']); ?>" class="card-img-top" alt="<?php echo e($rowCat['title']); ?>">
+<div class="card-body">
+<h6 class="card-title"><?php echo e($rowCat['title']); ?></h6>
+<p class="mb-2"><?php echo e($rowCat['author']); ?></p>
+<p class="text-danger fw-bold"><?php echo number_format((float)$rowCat['price']); ?> VND</p>
+<a href="product-detail.php?id=<?php echo (int)$rowCat['id']; ?>" class="btn btn-primary btn-sm">Xem chi tiết</a>
+</div>
+</div>
+</div>
+<?php } ?>
+</div>
+</div>
+<?php $first = false; } ?>
+</div>
+
+<h3 class="text-center mt-4 mb-4">Sách bán chạy</h3>
 <div class="row">
 <?php
 $bestSellerResult = mysqli_query($conn, "SELECT * FROM books ORDER BY price DESC LIMIT 4");
@@ -231,6 +313,64 @@ for ($i = 1; $i <= $totalPages; $i++) {
 <?php } ?>
 </ul>
 </nav>
+
+<div class="featured-reviews reveal-on-scroll mt-5">
+<h3 class="text-center mb-4">Đánh giá nổi bật</h3>
+<?php if (!$hasReviews) { ?>
+<div class="alert alert-info">Chưa có đánh giá nào. Hãy là người đầu tiên đánh giá sách!</div>
+<?php } else { ?>
+<div class="row g-3">
+<?php while ($rv = mysqli_fetch_assoc($featuredReviews)) { ?>
+<div class="col-md-4">
+<div class="review-card h-100">
+<div class="d-flex align-items-center gap-2 mb-2">
+<img class="review-thumb" src="assets/images/books/<?php echo e($rv['image']); ?>" alt="<?php echo e($rv['title']); ?>">
+<div>
+<a href="product-detail.php?id=<?php echo (int)$rv['book_id']; ?>" class="review-book"><?php echo e($rv['title']); ?></a>
+<div class="review-stars"><?php echo str_repeat('★', max(1, min(5, (int)$rv['rating']))); ?></div>
+</div>
+</div>
+<p class="mb-1"><strong><?php echo e($rv['name']); ?></strong></p>
+<p class="mb-0 review-comment"><?php echo e($rv['comment']); ?></p>
+</div>
+</div>
+<?php } ?>
+</div>
+<?php } ?>
+</div>
+
+<div class="faq-home reveal-on-scroll mt-5">
+<h3 class="text-center mb-4">FAQ và Chính sách</h3>
+<div class="accordion" id="faqHome">
+<div class="accordion-item">
+<h2 class="accordion-header" id="faqOne">
+<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqOneBody">Thời gian giao hàng bao lâu?</button>
+</h2>
+<div id="faqOneBody" class="accordion-collapse collapse show" data-bs-parent="#faqHome">
+<div class="accordion-body">Khu vực nội thành từ 1-2 ngày, ngoại tỉnh từ 3-5 ngày làm việc.</div>
+</div>
+</div>
+<div class="accordion-item">
+<h2 class="accordion-header" id="faqTwo">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqTwoBody">Có được đổi trả không?</button>
+</h2>
+<div id="faqTwoBody" class="accordion-collapse collapse" data-bs-parent="#faqHome">
+<div class="accordion-body">Được đổi trả trong 7 ngày nếu sách lỗi in ấn hoặc hư hại do vận chuyển.</div>
+</div>
+</div>
+<div class="accordion-item">
+<h2 class="accordion-header" id="faqThree">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqThreeBody">Thanh toán bằng cách nào?</button>
+</h2>
+<div id="faqThreeBody" class="accordion-collapse collapse" data-bs-parent="#faqHome">
+<div class="accordion-body">Hỗ trợ COD, chuyển khoản ngân hàng, VNPay và MoMo.</div>
+</div>
+</div>
+</div>
+<div class="text-center mt-3">
+<a class="btn btn-primary" href="policy.php">Xem đầy đủ chính sách</a>
+</div>
+</div>
 </div>
 
 <div id="toast" style="position:fixed; bottom:20px; right:20px; background:#22c55e; color:white; padding:12px 20px; border-radius:6px; display:none; z-index:999;">
@@ -240,8 +380,28 @@ for ($i = 1; $i <= $totalPages; $i++) {
 <?php include "includes/footer.php"; ?>
 <script>
 function showToast(){
-const toast = document.getElementById("toast");
-toast.style.display = "block";
-setTimeout(()=>{ toast.style.display = "none"; },2000);
+  const toast = document.getElementById("toast");
+  toast.style.display = "block";
+  setTimeout(()=>{ toast.style.display = "none"; },2000);
 }
+
+(function(){
+  const flashEnd = new Date();
+  flashEnd.setHours(23,59,59,999);
+  const timerEl = document.getElementById('flashTimer');
+  if (!timerEl) return;
+
+  function tick(){
+    const now = new Date();
+    let diff = Math.floor((flashEnd - now) / 1000);
+    if (diff < 0) diff = 0;
+    const h = String(Math.floor(diff / 3600)).padStart(2, '0');
+    const m = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
+    const s = String(diff % 60).padStart(2, '0');
+    timerEl.textContent = `${h}:${m}:${s}`;
+  }
+
+  tick();
+  setInterval(tick, 1000);
+})();
 </script>
