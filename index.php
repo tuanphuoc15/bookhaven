@@ -1,6 +1,20 @@
-<?php
+﻿<?php
 include "includes/config.php";
 include "includes/header.php";
+
+function bind_dynamic_params($stmt, $types, $params)
+{
+    if ($types === "") {
+        return;
+    }
+
+    $bindValues = [$types];
+    foreach ($params as $key => $value) {
+        $bindValues[] = &$params[$key];
+    }
+
+    call_user_func_array('mysqli_stmt_bind_param', array_merge([$stmt], $bindValues));
+}
 
 $limit = 8;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -9,34 +23,72 @@ $start = ($page - 1) * $limit;
 
 $search = isset($_GET['search']) ? trim($_GET['search']) : "";
 $category = isset($_GET['category']) ? (int)$_GET['category'] : 0;
+$minPrice = isset($_GET['min_price']) ? (int)$_GET['min_price'] : 0;
+$maxPrice = isset($_GET['max_price']) ? (int)$_GET['max_price'] : 0;
+$sort = isset($_GET['sort']) ? trim($_GET['sort']) : "newest";
 
-if ($search !== "") {
-    $stmt = mysqli_prepare($conn, "SELECT * FROM books WHERE title LIKE ? LIMIT ? OFFSET ?");
-    $keyword = "%" . $search . "%";
-    mysqli_stmt_bind_param($stmt, "sii", $keyword, $limit, $start);
+$allowedSorts = [
+    'newest' => 'id DESC',
+    'price_asc' => 'price ASC',
+    'price_desc' => 'price DESC',
+    'title_asc' => 'title ASC',
+    'title_desc' => 'title DESC',
+];
 
-    $countStmt = mysqli_prepare($conn, "SELECT COUNT(*) AS total FROM books WHERE title LIKE ?");
-    mysqli_stmt_bind_param($countStmt, "s", $keyword);
-} elseif ($category > 0) {
-    $stmt = mysqli_prepare($conn, "SELECT * FROM books WHERE category_id = ? LIMIT ? OFFSET ?");
-    mysqli_stmt_bind_param($stmt, "iii", $category, $limit, $start);
-
-    $countStmt = mysqli_prepare($conn, "SELECT COUNT(*) AS total FROM books WHERE category_id = ?");
-    mysqli_stmt_bind_param($countStmt, "i", $category);
-} else {
-    $stmt = mysqli_prepare($conn, "SELECT * FROM books LIMIT ? OFFSET ?");
-    mysqli_stmt_bind_param($stmt, "ii", $limit, $start);
-
-    $countStmt = mysqli_prepare($conn, "SELECT COUNT(*) AS total FROM books");
+if (!isset($allowedSorts[$sort])) {
+    $sort = 'newest';
 }
 
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
+$whereSql = " WHERE 1=1";
+$whereTypes = "";
+$whereParams = [];
 
+if ($search !== "") {
+    $whereSql .= " AND title LIKE ?";
+    $whereTypes .= "s";
+    $whereParams[] = "%" . $search . "%";
+}
+
+if ($category > 0) {
+    $whereSql .= " AND category_id = ?";
+    $whereTypes .= "i";
+    $whereParams[] = $category;
+}
+
+if ($minPrice > 0) {
+    $whereSql .= " AND price >= ?";
+    $whereTypes .= "i";
+    $whereParams[] = $minPrice;
+}
+
+if ($maxPrice > 0 && $maxPrice >= $minPrice) {
+    $whereSql .= " AND price <= ?";
+    $whereTypes .= "i";
+    $whereParams[] = $maxPrice;
+}
+
+$countSql = "SELECT COUNT(*) AS total FROM books" . $whereSql;
+$countStmt = mysqli_prepare($conn, $countSql);
+bind_dynamic_params($countStmt, $whereTypes, $whereParams);
 mysqli_stmt_execute($countStmt);
 $countResult = mysqli_stmt_get_result($countStmt);
 $totalBooks = (int) mysqli_fetch_assoc($countResult)['total'];
 $totalPages = max(1, (int) ceil($totalBooks / $limit));
+
+if ($page > $totalPages) {
+    $page = $totalPages;
+    $start = ($page - 1) * $limit;
+}
+
+$listSql = "SELECT * FROM books" . $whereSql . " ORDER BY " . $allowedSorts[$sort] . " LIMIT ? OFFSET ?";
+$listStmt = mysqli_prepare($conn, $listSql);
+$listTypes = $whereTypes . "ii";
+$listParams = $whereParams;
+$listParams[] = $limit;
+$listParams[] = $start;
+bind_dynamic_params($listStmt, $listTypes, $listParams);
+mysqli_stmt_execute($listStmt);
+$result = mysqli_stmt_get_result($listStmt);
 ?>
 
 <div class="container mt-3">
@@ -83,14 +135,49 @@ while ($best = mysqli_fetch_assoc($bestSellerResult)) {
 <?php } ?>
 </div>
 
-<div class="mb-4 text-center">
-<a href="index.php" class="btn btn-secondary">Tất cả</a>
-<a href="index.php?category=1" class="btn btn-outline-dark">Phát triển bản thân</a>
-<a href="index.php?category=2" class="btn btn-outline-dark">Tâm lý học</a>
-<a href="index.php?category=3" class="btn btn-outline-dark">Truyền cảm hứng</a>
-<a href="index.php?category=4" class="btn btn-outline-dark">Kỹ năng sống</a>
-<a href="index.php?category=5" class="btn btn-outline-dark">Kinh doanh</a>
-<a href="index.php?category=6" class="btn btn-outline-dark">Triết lý</a>
+<div class="card shadow-sm mt-4 mb-4">
+<div class="card-body">
+<form method="GET" class="row g-2 align-items-end">
+<div class="col-md-3">
+<label class="form-label mb-1">Từ khóa</label>
+<input type="text" name="search" class="form-control" value="<?php echo e($search); ?>" placeholder="Nhập tên sách...">
+</div>
+<div class="col-md-2">
+<label class="form-label mb-1">Danh mục</label>
+<select name="category" class="form-select">
+<option value="0">Tất cả</option>
+<option value="1" <?php echo $category === 1 ? 'selected' : ''; ?>>Phát triển bản thân</option>
+<option value="2" <?php echo $category === 2 ? 'selected' : ''; ?>>Tâm lý học</option>
+<option value="3" <?php echo $category === 3 ? 'selected' : ''; ?>>Truyền cảm hứng</option>
+<option value="4" <?php echo $category === 4 ? 'selected' : ''; ?>>Kỹ năng sống</option>
+<option value="5" <?php echo $category === 5 ? 'selected' : ''; ?>>Kinh doanh</option>
+<option value="6" <?php echo $category === 6 ? 'selected' : ''; ?>>Triết lý</option>
+</select>
+</div>
+<div class="col-md-2">
+<label class="form-label mb-1">Giá từ</label>
+<input type="number" min="0" name="min_price" class="form-control" value="<?php echo $minPrice > 0 ? (int)$minPrice : ''; ?>">
+</div>
+<div class="col-md-2">
+<label class="form-label mb-1">Giá đến</label>
+<input type="number" min="0" name="max_price" class="form-control" value="<?php echo $maxPrice > 0 ? (int)$maxPrice : ''; ?>">
+</div>
+<div class="col-md-2">
+<label class="form-label mb-1">Sắp xếp</label>
+<select name="sort" class="form-select">
+<option value="newest" <?php echo $sort === 'newest' ? 'selected' : ''; ?>>Mới nhất</option>
+<option value="price_asc" <?php echo $sort === 'price_asc' ? 'selected' : ''; ?>>Giá tăng dần</option>
+<option value="price_desc" <?php echo $sort === 'price_desc' ? 'selected' : ''; ?>>Giá giảm dần</option>
+<option value="title_asc" <?php echo $sort === 'title_asc' ? 'selected' : ''; ?>>Tên A-Z</option>
+<option value="title_desc" <?php echo $sort === 'title_desc' ? 'selected' : ''; ?>>Tên Z-A</option>
+</select>
+</div>
+<div class="col-md-1 d-grid gap-2">
+<button type="submit" class="btn btn-primary">Lọc</button>
+<a href="index.php" class="btn btn-outline-secondary">Reset</a>
+</div>
+</form>
+</div>
 </div>
 
 <div class="row">
@@ -110,6 +197,10 @@ while ($best = mysqli_fetch_assoc($bestSellerResult)) {
 <?php } ?>
 </div>
 
+<?php if ($totalBooks === 0) { ?>
+<div class="alert alert-warning">Không tìm thấy sách phù hợp bộ lọc.</div>
+<?php } ?>
+
 <nav>
 <ul class="pagination justify-content-center">
 <?php
@@ -119,6 +210,15 @@ if ($search !== "") {
 }
 if ($category > 0) {
     $params['category'] = $category;
+}
+if ($minPrice > 0) {
+    $params['min_price'] = $minPrice;
+}
+if ($maxPrice > 0) {
+    $params['max_price'] = $maxPrice;
+}
+if ($sort !== 'newest') {
+    $params['sort'] = $sort;
 }
 
 for ($i = 1; $i <= $totalPages; $i++) {
