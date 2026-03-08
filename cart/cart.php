@@ -6,10 +6,10 @@ include "../includes/header.php";
 ?>
 
 <div class="container mt-5">
-<h2 class="mb-4">Giỏ hàng cua ban</h2>
+<h2 class="mb-4">Giỏ hàng của bạn</h2>
 
 <?php if (empty($_SESSION['cart'])) { ?>
-<div class="alert alert-info">Giỏ hàng cua ban dang trong.</div>
+<div class="alert alert-info">Giỏ hàng của bạn đang trống.</div>
 <a href="../index.php" class="btn btn-secondary">Tiếp tục mua hàng</a>
 <?php } else { ?>
 <div class="table-responsive">
@@ -20,7 +20,7 @@ include "../includes/header.php";
 <th>Sách</th>
 <th>Giá</th>
 <th>Số lượng</th>
-<th>Tong</th>
+<th>Tổng</th>
 <th>Xóa</th>
 </tr>
 </thead>

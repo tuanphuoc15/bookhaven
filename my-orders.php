@@ -20,14 +20,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'cance
         mysqli_stmt_execute($cancelStmt);
 
         if (mysqli_stmt_affected_rows($cancelStmt) > 0) {
-            $alertMessage = 'Hủy đơn thanh cong.';
+            $alertMessage = 'Hủy đơn thành công.';
             $alertType = 'success';
         } else {
-            $alertMessage = 'Không the huy don (don da xu ly hoac thong tin khong khop).';
+            $alertMessage = 'Không thể hủy đơn (đơn đã xử lý hoặc thông tin không khớp).';
             $alertType = 'warning';
         }
     } else {
-        $alertMessage = 'Thông tin huy don khong hợp lệ.';
+        $alertMessage = 'Thông tin hủy đơn không hợp lệ.';
         $alertType = 'danger';
     }
 }
@@ -40,7 +40,7 @@ $methodLabels = [
     'cod' => 'COD',
     'vnpay' => 'VNPay',
     'momo' => 'MoMo',
-    'bank_transfer' => 'Chuyen khoan',
+    'bank_transfer' => 'Chuyển khoản',
 ];
 
 if ($searched && $email !== '' && $phone !== '' && filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -90,18 +90,18 @@ if ($searched && $email !== '' && $phone !== '' && filter_var($email, FILTER_VAL
 <?php } ?>
 
 <?php if ($searched && ($email === '' || $phone === '' || !filter_var($email, FILTER_VALIDATE_EMAIL))) { ?>
-<div class="alert alert-warning">Vui lòng nhap dung email va so dien thoai.</div>
+<div class="alert alert-warning">Vui lòng nhập đúng email và số điện thoại.</div>
 <?php } ?>
 
 <?php if ($searched && $email !== '' && $phone !== '' && filter_var($email, FILTER_VALIDATE_EMAIL)) { ?>
 <?php if (count($orders) === 0) { ?>
-<div class="alert alert-info">Không tim thay don hang phu hop.</div>
+<div class="alert alert-info">Không tìm thấy đơn hàng phù hợp.</div>
 <?php } else { ?>
 <?php foreach ($orders as $order) { ?>
 <div class="card shadow-sm mb-3">
 <div class="card-body">
 <div class="d-flex justify-content-between flex-wrap gap-2 mb-2">
-<h5 class="mb-0">Don #<?php echo (int)$order['id']; ?></h5>
+<h5 class="mb-0">Đơn #<?php echo (int)$order['id']; ?></h5>
 <span class="badge text-bg-secondary"><?php echo e($order['status'] ?? 'pending'); ?></span>
 </div>
 <p class="mb-1"><strong>Thanh toán:</strong> <?php echo e($methodLabels[$order['payment_method'] ?? 'cod'] ?? strtoupper((string)($order['payment_method'] ?? 'cod'))); ?></p>

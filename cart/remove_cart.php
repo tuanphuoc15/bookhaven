@@ -6,6 +6,6 @@ if ($id > 0 && isset($_SESSION['cart'][$id])) {
     unset($_SESSION['cart'][$id]);
 }
 
-header("Lọcation: cart.php");
+header("Location: cart.php");
 exit();
 ?>

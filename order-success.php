@@ -8,7 +8,7 @@ $labels = [
     'cod' => 'COD',
     'vnpay' => 'VNPay',
     'momo' => 'MoMo',
-    'bank_transfer' => 'Chuyen khoan ngan hang',
+    'bank_transfer' => 'Chuyển khoản ngân hàng',
 ];
 $methodLabel = $labels[$method] ?? 'COD';
 
@@ -23,7 +23,7 @@ if ($email !== '' && $phone !== '') {
 <p>Cảm ơn bạn đã mua sách tại BookHaven.</p>
 <p class="mb-4">Phương thức thanh toán: <strong><?php echo e($methodLabel); ?></strong></p>
 <div class="d-flex justify-content-center gap-2">
-<a href="<?php echo e($queryLink); ?>" class="btn btn-success">Xem đơn hang da mua</a>
+<a href="<?php echo e($queryLink); ?>" class="btn btn-success">Xem đơn hàng đã mua</a>
 <a href="index.php" class="btn btn-primary">Quay lại trang chủ</a>
 </div>
 </div>

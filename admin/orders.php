@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         mysqli_stmt_execute($update);
     }
 
-    header('Lọcation: orders.php');
+    header('Location: orders.php');
     exit();
 }
 
@@ -31,7 +31,14 @@ $methodLabels = [
     'cod' => 'COD',
     'vnpay' => 'VNPay',
     'momo' => 'MoMo',
-    'bank_transfer' => 'Chuyen khoan',
+    'bank_transfer' => 'Chuyển khoản',
+];
+
+$statusLabels = [
+    'pending' => 'Chờ xử lý',
+    'processing' => 'Đang xử lý',
+    'completed' => 'Hoàn thành',
+    'cancelled' => 'Đã hủy',
 ];
 ?>
 <!DOCTYPE html>
@@ -55,7 +62,7 @@ $methodLabels = [
 </nav>
 
 <div class="container py-4">
-<h3 class="mb-3">Danh sach don hang</h3>
+<h3 class="mb-3">Danh sách đơn hàng</h3>
 <div class="table-responsive">
 <table class="table table-bordered bg-white align-middle">
 <thead class="table-dark">
@@ -86,14 +93,13 @@ $methodLabels = [
 <select class="form-select form-select-sm" name="status">
 <?php
 $current = $order['status'] ?? 'pending';
-$statuses = ['pending' => 'Pending', 'processing' => 'Processing', 'completed' => 'Completed', 'cancelled' => 'Cancelled'];
-foreach ($statuses as $value => $label) {
+foreach ($statusLabels as $value => $label) {
     $selected = $current === $value ? 'selected' : '';
     echo "<option value=\"" . e($value) . "\" $selected>" . e($label) . "</option>";
 }
 ?>
 </select>
-<button class="btn btn-sm btn-success" type="submit">Luu</button>
+<button class="btn btn-sm btn-success" type="submit">Lưu</button>
 </form>
 </td>
 </tr>

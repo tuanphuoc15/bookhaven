@@ -4,7 +4,7 @@ require_admin_login();
 
 $orderId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 if ($orderId <= 0) {
-    header('Lọcation: orders.php');
+    header('Location: orders.php');
     exit();
 }
 
@@ -15,7 +15,7 @@ $orderResult = mysqli_stmt_get_result($orderStmt);
 $order = mysqli_fetch_assoc($orderResult);
 
 if (!$order) {
-    header('Lọcation: orders.php');
+    header('Location: orders.php');
     exit();
 }
 
@@ -33,7 +33,14 @@ $methodLabels = [
     'cod' => 'COD',
     'vnpay' => 'VNPay',
     'momo' => 'MoMo',
-    'bank_transfer' => 'Chuyen khoan',
+    'bank_transfer' => 'Chuyển khoản',
+];
+
+$statusLabels = [
+    'pending' => 'Chờ xử lý',
+    'processing' => 'Đang xử lý',
+    'completed' => 'Hoàn thành',
+    'cancelled' => 'Đã hủy',
 ];
 
 $total = 0;
@@ -43,12 +50,12 @@ $total = 0;
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Chi tiết don hang #<?php echo (int)$orderId; ?></title>
+<title>Chi tiết đơn hàng #<?php echo (int)$orderId; ?></title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
 <div class="container py-4">
-<a href="orders.php" class="btn btn-secondary btn-sm mb-3">&larr; Quay lai danh sach don</a>
+<a href="orders.php" class="btn btn-secondary btn-sm mb-3">&larr; Quay lại danh sách đơn</a>
 <div class="card shadow-sm mb-3">
 <div class="card-body">
 <h4 class="mb-3">Đơn hàng #<?php echo (int)$order['id']; ?></h4>
@@ -57,13 +64,13 @@ $total = 0;
 <p class="mb-1"><strong>Điện thoại:</strong> <?php echo e($order['phone']); ?></p>
 <p class="mb-1"><strong>Địa chỉ:</strong> <?php echo e($order['address']); ?></p>
 <p class="mb-1"><strong>Thanh toán:</strong> <?php echo e($methodLabels[$order['payment_method'] ?? 'cod'] ?? strtoupper((string)($order['payment_method'] ?? 'cod'))); ?></p>
-<p class="mb-0"><strong>Trạng thái:</strong> <?php echo e((string)($order['status'] ?? 'pending')); ?></p>
+<p class="mb-0"><strong>Trạng thái:</strong> <?php echo e($statusLabels[$order['status'] ?? 'pending'] ?? ($order['status'] ?? 'pending')); ?></p>
 </div>
 </div>
 
 <div class="card shadow-sm">
 <div class="card-body">
-<h5 class="mb-3">San pham trong don</h5>
+<h5 class="mb-3">Sản phẩm trong đơn</h5>
 <table class="table table-bordered">
 <thead class="table-light">
 <tr><th>Sách</th><th>Giá</th><th>Số lượng</th><th>Thành tiền</th></tr>

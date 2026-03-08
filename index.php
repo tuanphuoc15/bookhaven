@@ -114,7 +114,7 @@ $result = mysqli_stmt_get_result($listStmt);
 <div class="container mt-4">
 <h2 class="text-center mb-4">BookHaven Online Bookstore</h2>
 
-<h3 class="text-center mt-5 mb-4">Sách ban chay</h3>
+<h3 class="text-center mt-5 mb-4">Sách bán chạy</h3>
 <div class="row">
 <?php
 $bestSellerResult = mysqli_query($conn, "SELECT * FROM books ORDER BY price DESC LIMIT 4");
@@ -155,19 +155,19 @@ while ($best = mysqli_fetch_assoc($bestSellerResult)) {
 </select>
 </div>
 <div class="col-md-2">
-<label class="form-label mb-1">Giá tu</label>
+<label class="form-label mb-1">Giá từ</label>
 <input type="number" min="0" name="min_price" class="form-control" value="<?php echo $minPrice > 0 ? (int)$minPrice : ''; ?>">
 </div>
 <div class="col-md-2">
-<label class="form-label mb-1">Giá den</label>
+<label class="form-label mb-1">Giá đến</label>
 <input type="number" min="0" name="max_price" class="form-control" value="<?php echo $maxPrice > 0 ? (int)$maxPrice : ''; ?>">
 </div>
 <div class="col-md-2">
 <label class="form-label mb-1">Sắp xếp</label>
 <select name="sort" class="form-select">
 <option value="newest" <?php echo $sort === 'newest' ? 'selected' : ''; ?>>Mới nhất</option>
-<option value="price_asc" <?php echo $sort === 'price_asc' ? 'selected' : ''; ?>>Giá tang dan</option>
-<option value="price_desc" <?php echo $sort === 'price_desc' ? 'selected' : ''; ?>>Giá giam dan</option>
+<option value="price_asc" <?php echo $sort === 'price_asc' ? 'selected' : ''; ?>>Giá tăng dần</option>
+<option value="price_desc" <?php echo $sort === 'price_desc' ? 'selected' : ''; ?>>Giá giảm dần</option>
 <option value="title_asc" <?php echo $sort === 'title_asc' ? 'selected' : ''; ?>>Tên A-Z</option>
 <option value="title_desc" <?php echo $sort === 'title_desc' ? 'selected' : ''; ?>>Tên Z-A</option>
 </select>

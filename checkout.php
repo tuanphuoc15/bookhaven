@@ -11,7 +11,7 @@ $selectedMethod = $_POST['payment_method'] ?? 'cod';
 <h2 class="text-center mb-4">Thanh toán</h2>
 
 <?php if ($isCartEmpty) { ?>
-<div class="alert alert-warning">Ban chua co san pham trong gio hang.</div>
+<div class="alert alert-warning">Bạn chưa có sản phẩm trong giỏ hàng.</div>
 <div class="text-center"><a href="index.php" class="btn btn-primary">Quay lại mua hàng</a></div>
 <?php } else { ?>
 <div class="row">
@@ -40,10 +40,10 @@ $selectedMethod = $_POST['payment_method'] ?? 'cod';
 <div class="mb-3">
 <label class="form-label">Phương thức thanh toán</label>
 <select name="payment_method" class="form-select" required>
-<option value="cod" <?php echo $selectedMethod === 'cod' ? 'selected' : ''; ?>>COD - Thanh toán khi nhan hang</option>
+<option value="cod" <?php echo $selectedMethod === 'cod' ? 'selected' : ''; ?>>COD - Thanh toán khi nhận hàng</option>
 <option value="vnpay" <?php echo $selectedMethod === 'vnpay' ? 'selected' : ''; ?>>VNPay</option>
 <option value="momo" <?php echo $selectedMethod === 'momo' ? 'selected' : ''; ?>>MoMo</option>
-<option value="bank_transfer" <?php echo $selectedMethod === 'bank_transfer' ? 'selected' : ''; ?>>Chuyen khoan ngan hang</option>
+<option value="bank_transfer" <?php echo $selectedMethod === 'bank_transfer' ? 'selected' : ''; ?>>Chuyển khoản ngân hàng</option>
 </select>
 </div>
 
