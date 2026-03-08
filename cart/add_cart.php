@@ -1,10 +1,10 @@
-﻿<?php
+<?php
 session_start();
 include "../includes/config.php";
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($id <= 0) {
-    header("Location: ../index.php");
+    header("Lọcation: ../index.php");
     exit();
 }
 
@@ -14,7 +14,7 @@ mysqli_stmt_execute($checkStmt);
 $exists = mysqli_stmt_get_result($checkStmt);
 
 if (!mysqli_fetch_assoc($exists)) {
-    header("Location: ../index.php");
+    header("Lọcation: ../index.php");
     exit();
 }
 
@@ -24,6 +24,6 @@ if (isset($_SESSION['cart'][$id])) {
     $_SESSION['cart'][$id] = 1;
 }
 
-header("Location: ../cart/cart.php");
+header("Lọcation: ../cart/cart.php");
 exit();
 ?>

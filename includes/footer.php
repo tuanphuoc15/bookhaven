@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 if (!isset($basePath)) {
     $basePath = "";
 }
@@ -8,40 +8,40 @@ if (!isset($basePath)) {
 <div class="row g-4 bh-footer-top">
 <div class="col-lg-4 col-md-6">
 <h4 class="bh-footer-brand">BookHaven</h4>
-<p class="bh-footer-desc">Nha sach online voi nhieu dau sach chat luong ve phat trien ban than, kinh doanh va khoa hoc.</p>
+<p class="bh-footer-desc">Nhà sách online với nhiều đầu sách chất lượng về phát triển bản thân, kinh doanh và khoa học.</p>
 <div class="bh-footer-contact">
-<p><i class="fa-solid fa-location-dot"></i> TP Ho Chi Minh, Viet Nam</p>
+<p><i class="fa-solid fa-location-dot"></i> TP Hồ Chí Minh, Việt Nam</p>
 <p><i class="fa-solid fa-envelope"></i> support@bookhaven.vn</p>
 <p><i class="fa-solid fa-phone"></i> 1900 1234</p>
 </div>
 </div>
 
 <div class="col-lg-2 col-md-6">
-<h6 class="bh-footer-title">Lien ket nhanh</h6>
+<h6 class="bh-footer-title">Liên kết nhanh</h6>
 <ul class="bh-footer-links">
-<li><a href="<?php echo e($basePath); ?>index.php">Trang chu</a></li>
-<li><a href="<?php echo e($basePath); ?>shop.php">Cua hang</a></li>
-<li><a href="<?php echo e($basePath); ?>cart/cart.php">Gio hang</a></li>
-<li><a href="<?php echo e($basePath); ?>my-orders.php">Don hang</a></li>
+<li><a href="<?php echo e($basePath); ?>index.php">Trang chủ</a></li>
+<li><a href="<?php echo e($basePath); ?>shop.php">Cửa hàng</a></li>
+<li><a href="<?php echo e($basePath); ?>cart/cart.php">Giỏ hàng</a></li>
+<li><a href="<?php echo e($basePath); ?>my-orders.php">Đơn hàng</a></li>
 </ul>
 </div>
 
 <div class="col-lg-3 col-md-6">
-<h6 class="bh-footer-title">Ho tro khach hang</h6>
+<h6 class="bh-footer-title">Hỗ trợ khách hàng</h6>
 <ul class="bh-footer-links">
-<li><a href="#">Huong dan mua hang</a></li>
-<li><a href="#">Chinh sach doi tra</a></li>
-<li><a href="#">Dieu khoan su dung</a></li>
-<li><a href="#">Chinh sach bao mat</a></li>
+<li><a href="#">Hướng dẫn mua hàng</a></li>
+<li><a href="#">Chính sách đổi trả</a></li>
+<li><a href="#">Điều khoản sử dụng</a></li>
+<li><a href="#">Chính sách bảo mật</a></li>
 </ul>
 <div class="bh-working-time">
-<p class="mb-1"><strong>Gio ho tro:</strong></p>
+<p class="mb-1"><strong>Giờ hỗ trợ:</strong></p>
 <p class="mb-0">08:00 - 22:00 (T2 - CN)</p>
 </div>
 </div>
 
 <div class="col-lg-3 col-md-6">
-<h6 class="bh-footer-title">Ket noi va thanh toan</h6>
+<h6 class="bh-footer-title">Kết nối và thanh toán</h6>
 <div class="bh-social mb-3">
 <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
 <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>

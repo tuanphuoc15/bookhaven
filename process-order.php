@@ -3,12 +3,12 @@ session_start();
 include "includes/config.php";
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: checkout.php");
+    header("Lọcation: checkout.php");
     exit();
 }
 
 if (empty($_SESSION['cart'])) {
-    header("Location: cart/cart.php");
+    header("Lọcation: cart/cart.php");
     exit();
 }
 
@@ -24,17 +24,17 @@ if (!in_array($paymentMethod, $allowedMethods, true)) {
 }
 
 if ($name === '' || $email === '' || $phone === '' || $address === '') {
-    header("Location: checkout.php");
+    header("Lọcation: checkout.php");
     exit();
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    header("Location: checkout.php");
+    header("Lọcation: checkout.php");
     exit();
 }
 
 if (!preg_match('/^[0-9+\-\s]{8,20}$/', $phone)) {
-    header("Location: checkout.php");
+    header("Lọcation: checkout.php");
     exit();
 }
 
@@ -64,11 +64,11 @@ try {
     mysqli_commit($conn);
     unset($_SESSION['cart']);
 
-    header("Location: order-success.php?method=" . urlencode($paymentMethod) . "&email=" . urlencode($email) . "&phone=" . urlencode($phone));
+    header("Lọcation: order-success.php?method=" . urlencode($paymentMethod) . "&email=" . urlencode($email) . "&phone=" . urlencode($phone));
     exit();
 } catch (Throwable $e) {
     mysqli_rollback($conn);
-    header("Location: checkout.php");
+    header("Lọcation: checkout.php");
     exit();
 }
 ?>

@@ -1,14 +1,14 @@
-﻿<?php
+<?php
 include __DIR__ . '/_bootstrap.php';
 require_admin_login();
 
 $categories = [
-    1 => 'Phat trien ban than',
-    2 => 'Tam ly hoc',
-    3 => 'Truyen cam hung',
-    4 => 'Ky nang song',
+    1 => 'Phát triển bản thân',
+    2 => 'Tâm lý học',
+    3 => 'Truyền cảm hứng',
+    4 => 'Kỹ năng sống',
     5 => 'Kinh doanh',
-    6 => 'Triet ly',
+    6 => 'Triết lý',
 ];
 
 function handle_image_upload($file)
@@ -29,7 +29,7 @@ function handle_image_upload($file)
 
     $imageInfo = @getimagesize($file['tmp_name']);
     if ($imageInfo === false) {
-        return ['ok' => false, 'message' => 'File upload khong phai anh hop le.'];
+        return ['ok' => false, 'message' => 'File upload khong phai anh hợp lệ.'];
     }
 
     $targetDir = realpath(__DIR__ . '/../assets/images/books');
@@ -41,7 +41,7 @@ function handle_image_upload($file)
     $targetPath = $targetDir . DIRECTORY_SEPARATOR . $newName;
 
     if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
-        return ['ok' => false, 'message' => 'Khong the luu anh upload.'];
+        return ['ok' => false, 'message' => 'Không the luu anh upload.'];
     }
 
     return ['ok' => true, 'filename' => $newName];
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             mysqli_stmt_bind_param($stmt, 'i', $deleteId);
             mysqli_stmt_execute($stmt);
         }
-        header('Location: books.php');
+        header('Lọcation: books.php');
         exit();
     }
 
@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $publisher = trim($_POST['publisher'] ?? '');
 
         if ($title === '' || $author === '' || $price <= 0) {
-            $error = 'Vui long nhap day du Tieu de, Tac gia va Gia hop le.';
+            $error = 'Vui lòng nhap day du Tiêu đề, Tác giả va Giá hợp lệ.';
             $action = $bookId > 0 ? 'edit' : 'create';
             $id = $bookId;
         } else {
@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     mysqli_stmt_bind_param($stmt, 'ssdssiisis', $title, $author, $price, $description, $image, $categoryId, $publishYear, $language, $pages, $publisher);
                     mysqli_stmt_execute($stmt);
                 }
-                header('Location: books.php');
+                header('Lọcation: books.php');
                 exit();
             }
         }
@@ -160,7 +160,7 @@ $books = mysqli_query($conn, 'SELECT id, title, author, price, category_id, imag
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Quan ly sach - Admin</title>
+<title>Quản lý sách - Admin</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
@@ -169,16 +169,16 @@ $books = mysqli_query($conn, 'SELECT id, title, author, price, category_id, imag
 <a class="navbar-brand" href="index.php">BookHaven Admin</a>
 <div>
 <a class="btn btn-outline-light btn-sm me-2" href="index.php">Dashboard</a>
-<a class="btn btn-outline-light btn-sm me-2" href="orders.php">Don hang</a>
-<a class="btn btn-outline-warning btn-sm" href="logout.php">Dang xuat</a>
+<a class="btn btn-outline-light btn-sm me-2" href="orders.php">Đơn hàng</a>
+<a class="btn btn-outline-warning btn-sm" href="logout.php">Đăng xuất</a>
 </div>
 </div>
 </nav>
 
 <div class="container py-4">
 <div class="d-flex justify-content-between align-items-center mb-3">
-<h3 class="mb-0">Quan ly sach</h3>
-<a class="btn btn-primary" href="books.php?action=create">+ Them sach</a>
+<h3 class="mb-0">Quản lý sách</h3>
+<a class="btn btn-primary" href="books.php?action=create">+ Thêm sách</a>
 </div>
 
 <?php if ($error !== '') { ?>
@@ -188,26 +188,26 @@ $books = mysqli_query($conn, 'SELECT id, title, author, price, category_id, imag
 <?php if ($action === 'create' || $action === 'edit') { ?>
 <div class="card shadow-sm mb-4">
 <div class="card-body">
-<h5 class="mb-3"><?php echo $action === 'edit' ? 'Sua sach' : 'Them sach moi'; ?></h5>
+<h5 class="mb-3"><?php echo $action === 'edit' ? 'Sửa sách' : 'Thêm sách moi'; ?></h5>
 <form method="POST" class="row g-3" enctype="multipart/form-data">
 <input type="hidden" name="form_action" value="save">
 <input type="hidden" name="id" value="<?php echo (int)$book['id']; ?>">
 <input type="hidden" name="current_image" value="<?php echo e($book['image']); ?>">
 
 <div class="col-md-6">
-<label class="form-label">Tieu de</label>
+<label class="form-label">Tiêu đề</label>
 <input type="text" name="title" class="form-control" value="<?php echo e($book['title']); ?>" required>
 </div>
 <div class="col-md-6">
-<label class="form-label">Tac gia</label>
+<label class="form-label">Tác giả</label>
 <input type="text" name="author" class="form-control" value="<?php echo e($book['author']); ?>" required>
 </div>
 <div class="col-md-3">
-<label class="form-label">Gia (VND)</label>
+<label class="form-label">Giá (VND)</label>
 <input type="number" min="1" step="1000" name="price" class="form-control" value="<?php echo e((string)$book['price']); ?>" required>
 </div>
 <div class="col-md-3">
-<label class="form-label">Danh muc</label>
+<label class="form-label">Danh mục</label>
 <select name="category_id" class="form-select">
 <?php foreach ($categories as $catId => $catName) { ?>
 <option value="<?php echo $catId; ?>" <?php echo (int)$book['category_id'] === $catId ? 'selected' : ''; ?>><?php echo e($catName); ?></option>
@@ -215,7 +215,7 @@ $books = mysqli_query($conn, 'SELECT id, title, author, price, category_id, imag
 </select>
 </div>
 <div class="col-md-3">
-<label class="form-label">Nam xuat ban</label>
+<label class="form-label">Năm xuất bản</label>
 <input type="number" min="1900" max="2100" name="publish_year" class="form-control" value="<?php echo e((string)$book['publish_year']); ?>">
 </div>
 <div class="col-md-3">
@@ -223,11 +223,11 @@ $books = mysqli_query($conn, 'SELECT id, title, author, price, category_id, imag
 <input type="number" min="1" name="pages" class="form-control" value="<?php echo e((string)$book['pages']); ?>">
 </div>
 <div class="col-md-6">
-<label class="form-label">Nha xuat ban</label>
+<label class="form-label">Nhà xuất bản</label>
 <input type="text" name="publisher" class="form-control" value="<?php echo e($book['publisher']); ?>">
 </div>
 <div class="col-md-6">
-<label class="form-label">Ngon ngu</label>
+<label class="form-label">Ngôn ngữ</label>
 <input type="text" name="language" class="form-control" value="<?php echo e($book['language']); ?>">
 </div>
 <div class="col-md-6">
@@ -242,7 +242,7 @@ $books = mysqli_query($conn, 'SELECT id, title, author, price, category_id, imag
 <input type="text" name="image" class="form-control" value="<?php echo e($book['image']); ?>" placeholder="vi du: book1.jpg">
 </div>
 <div class="col-12">
-<label class="form-label">Mo ta</label>
+<label class="form-label">Mô tả</label>
 <textarea name="description" rows="4" class="form-control"><?php echo e($book['description']); ?></textarea>
 </div>
 <div class="col-12 d-flex gap-2">
@@ -262,10 +262,10 @@ $books = mysqli_query($conn, 'SELECT id, title, author, price, category_id, imag
 <tr>
 <th>ID</th>
 <th>Anh</th>
-<th>Tieu de</th>
-<th>Tac gia</th>
-<th>Gia</th>
-<th>Danh muc</th>
+<th>Tiêu đề</th>
+<th>Tác giả</th>
+<th>Giá</th>
+<th>Danh mục</th>
 <th>Thao tac</th>
 </tr>
 </thead>
@@ -280,10 +280,10 @@ $books = mysqli_query($conn, 'SELECT id, title, author, price, category_id, imag
 <td><?php echo e($categories[(int)$row['category_id']] ?? 'Khac'); ?></td>
 <td>
 <a class="btn btn-sm btn-primary" href="books.php?action=edit&id=<?php echo (int)$row['id']; ?>">Sua</a>
-<form method="POST" class="d-inline" onsubmit="return confirm('Xoa sach nay?');">
+<form method="POST" class="d-inline" onsubmit="return confirm('Xóa sách này?');">
 <input type="hidden" name="form_action" value="delete">
 <input type="hidden" name="id" value="<?php echo (int)$row['id']; ?>">
-<button class="btn btn-sm btn-danger" type="submit">Xoa</button>
+<button class="btn btn-sm btn-danger" type="submit">Xóa</button>
 </form>
 </td>
 </tr>

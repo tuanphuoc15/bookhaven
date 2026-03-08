@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 include __DIR__ . "/../includes/config.php";
 
@@ -13,7 +13,7 @@ function admin_is_logged_in()
 function require_admin_login()
 {
     if (!admin_is_logged_in()) {
-        header("Location: login.php");
+        header("Lọcation: login.php");
         exit();
     }
 }

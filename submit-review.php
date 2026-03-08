@@ -1,8 +1,8 @@
-﻿<?php
+<?php
 include "includes/config.php";
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: index.php");
+    header("Lọcation: index.php");
     exit();
 }
 
@@ -12,7 +12,7 @@ $rating = isset($_POST['rating']) ? (int)$_POST['rating'] : 0;
 $comment = trim($_POST['comment'] ?? '');
 
 if ($bookId <= 0 || $name === '' || $rating < 1 || $rating > 5) {
-    header("Location: index.php");
+    header("Lọcation: index.php");
     exit();
 }
 
@@ -27,6 +27,6 @@ $stmt = mysqli_prepare($conn, "INSERT INTO reviews(book_id, name, rating, commen
 mysqli_stmt_bind_param($stmt, "isis", $bookId, $name, $rating, $comment);
 mysqli_stmt_execute($stmt);
 
-header("Location: product-detail.php?id=" . $bookId);
+header("Lọcation: product-detail.php?id=" . $bookId);
 exit();
 ?>

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include "includes/config.php";
 include "includes/header.php";
 
@@ -105,16 +105,16 @@ $result = mysqli_stmt_get_result($listStmt);
 
 <div class="hero-banner reveal-on-scroll">
 <div class="container text-center">
-<h1>Kham pha the gioi tri thuc</h1>
-<p>Hon 100+ cuon sach phat trien ban than va truyen cam hung</p>
-<a href="shop.php" class="btn btn-warning btn-lg">Kham pha ngay</a>
+<h1>Khám phá thế giới tri thức</h1>
+<p>Hơn 100+ cuốn sách phát triển bản thân và truyền cảm hứng</p>
+<a href="shop.php" class="btn btn-warning btn-lg">Khám phá ngay</a>
 </div>
 </div>
 
 <div class="container mt-4">
 <h2 class="text-center mb-4">BookHaven Online Bookstore</h2>
 
-<h3 class="text-center mt-5 mb-4">Sach ban chay</h3>
+<h3 class="text-center mt-5 mb-4">Sách ban chay</h3>
 <div class="row">
 <?php
 $bestSellerResult = mysqli_query($conn, "SELECT * FROM books ORDER BY price DESC LIMIT 4");
@@ -122,13 +122,13 @@ while ($best = mysqli_fetch_assoc($bestSellerResult)) {
 ?>
 <div class="col-md-3 reveal-on-scroll">
 <div class="card shadow book-card position-relative">
-<span class="badge bg-danger bestseller-badge">Ban chay</span>
+<span class="badge bg-danger bestseller-badge">Bán chạy</span>
 <img src="assets/images/books/<?php echo e($best['image']); ?>" class="card-img-top" alt="<?php echo e($best['title']); ?>">
 <div class="card-body">
 <h6 class="card-title"><?php echo e($best['title']); ?></h6>
 <p class="text-danger fw-bold"><?php echo number_format((float)$best['price']); ?> VND</p>
 <a href="product-detail.php?id=<?php echo (int)$best['id']; ?>" class="btn btn-primary btn-sm">Xem</a>
-<a href="cart/add_cart.php?id=<?php echo (int)$best['id']; ?>" class="btn btn-success btn-sm">Them vao gio</a>
+<a href="cart/add_cart.php?id=<?php echo (int)$best['id']; ?>" class="btn btn-success btn-sm">Thêm vào giỏ</a>
 </div>
 </div>
 </div>
@@ -139,41 +139,41 @@ while ($best = mysqli_fetch_assoc($bestSellerResult)) {
 <div class="card-body">
 <form method="GET" class="row g-2 align-items-end">
 <div class="col-md-3 reveal-on-scroll">
-<label class="form-label mb-1">Tu khoa</label>
-<input type="text" name="search" class="form-control" value="<?php echo e($search); ?>" placeholder="Nhap ten sach...">
+<label class="form-label mb-1">Từ khóa</label>
+<input type="text" name="search" class="form-control" value="<?php echo e($search); ?>" placeholder="Nhập tên sách...">
 </div>
 <div class="col-md-2">
-<label class="form-label mb-1">Danh muc</label>
+<label class="form-label mb-1">Danh mục</label>
 <select name="category" class="form-select">
-<option value="0">Tat ca</option>
-<option value="1" <?php echo $category === 1 ? 'selected' : ''; ?>>Phat trien ban than</option>
-<option value="2" <?php echo $category === 2 ? 'selected' : ''; ?>>Tam ly hoc</option>
-<option value="3" <?php echo $category === 3 ? 'selected' : ''; ?>>Truyen cam hung</option>
-<option value="4" <?php echo $category === 4 ? 'selected' : ''; ?>>Ky nang song</option>
+<option value="0">Tất cả</option>
+<option value="1" <?php echo $category === 1 ? 'selected' : ''; ?>>Phát triển bản thân</option>
+<option value="2" <?php echo $category === 2 ? 'selected' : ''; ?>>Tâm lý học</option>
+<option value="3" <?php echo $category === 3 ? 'selected' : ''; ?>>Truyền cảm hứng</option>
+<option value="4" <?php echo $category === 4 ? 'selected' : ''; ?>>Kỹ năng sống</option>
 <option value="5" <?php echo $category === 5 ? 'selected' : ''; ?>>Kinh doanh</option>
-<option value="6" <?php echo $category === 6 ? 'selected' : ''; ?>>Triet ly</option>
+<option value="6" <?php echo $category === 6 ? 'selected' : ''; ?>>Triết lý</option>
 </select>
 </div>
 <div class="col-md-2">
-<label class="form-label mb-1">Gia tu</label>
+<label class="form-label mb-1">Giá tu</label>
 <input type="number" min="0" name="min_price" class="form-control" value="<?php echo $minPrice > 0 ? (int)$minPrice : ''; ?>">
 </div>
 <div class="col-md-2">
-<label class="form-label mb-1">Gia den</label>
+<label class="form-label mb-1">Giá den</label>
 <input type="number" min="0" name="max_price" class="form-control" value="<?php echo $maxPrice > 0 ? (int)$maxPrice : ''; ?>">
 </div>
 <div class="col-md-2">
-<label class="form-label mb-1">Sap xep</label>
+<label class="form-label mb-1">Sắp xếp</label>
 <select name="sort" class="form-select">
-<option value="newest" <?php echo $sort === 'newest' ? 'selected' : ''; ?>>Moi nhat</option>
-<option value="price_asc" <?php echo $sort === 'price_asc' ? 'selected' : ''; ?>>Gia tang dan</option>
-<option value="price_desc" <?php echo $sort === 'price_desc' ? 'selected' : ''; ?>>Gia giam dan</option>
-<option value="title_asc" <?php echo $sort === 'title_asc' ? 'selected' : ''; ?>>Ten A-Z</option>
-<option value="title_desc" <?php echo $sort === 'title_desc' ? 'selected' : ''; ?>>Ten Z-A</option>
+<option value="newest" <?php echo $sort === 'newest' ? 'selected' : ''; ?>>Mới nhất</option>
+<option value="price_asc" <?php echo $sort === 'price_asc' ? 'selected' : ''; ?>>Giá tang dan</option>
+<option value="price_desc" <?php echo $sort === 'price_desc' ? 'selected' : ''; ?>>Giá giam dan</option>
+<option value="title_asc" <?php echo $sort === 'title_asc' ? 'selected' : ''; ?>>Tên A-Z</option>
+<option value="title_desc" <?php echo $sort === 'title_desc' ? 'selected' : ''; ?>>Tên Z-A</option>
 </select>
 </div>
 <div class="col-md-1 d-grid gap-2">
-<button type="submit" class="btn btn-primary">Loc</button>
+<button type="submit" class="btn btn-primary">Lọc</button>
 <a href="index.php" class="btn btn-outline-secondary">Reset</a>
 </div>
 </form>
@@ -187,10 +187,10 @@ while ($best = mysqli_fetch_assoc($bestSellerResult)) {
 <img src="assets/images/books/<?php echo e($row['image']); ?>" class="card-img-top" style="height:250px; object-fit:cover;" alt="<?php echo e($row['title']); ?>">
 <div class="card-body">
 <h5 class="card-title"><?php echo e($row['title']); ?></h5>
-<p>Tac gia: <?php echo e($row['author']); ?></p>
-<p class="text-danger fw-bold">Gia: <?php echo number_format((float)$row['price']); ?> VND</p>
+<p>Tác giả: <?php echo e($row['author']); ?></p>
+<p class="text-danger fw-bold">Giá: <?php echo number_format((float)$row['price']); ?> VND</p>
 <a href="product-detail.php?id=<?php echo (int)$row['id']; ?>" class="btn btn-primary btn-sm">Xem</a>
-<a href="cart/add_cart.php?id=<?php echo (int)$row['id']; ?>" onclick="showToast()" class="btn btn-success btn-sm">Them vao gio</a>
+<a href="cart/add_cart.php?id=<?php echo (int)$row['id']; ?>" onclick="showToast()" class="btn btn-success btn-sm">Thêm vào giỏ</a>
 </div>
 </div>
 </div>
@@ -198,7 +198,7 @@ while ($best = mysqli_fetch_assoc($bestSellerResult)) {
 </div>
 
 <?php if ($totalBooks === 0) { ?>
-<div class="alert alert-warning">Khong tim thay sach phu hop bo loc.</div>
+<div class="alert alert-warning">Không tìm thấy sách phù hợp bộ lọc.</div>
 <?php } ?>
 
 <nav class="reveal-on-scroll">
@@ -234,7 +234,7 @@ for ($i = 1; $i <= $totalPages; $i++) {
 </div>
 
 <div id="toast" style="position:fixed; bottom:20px; right:20px; background:#22c55e; color:white; padding:12px 20px; border-radius:6px; display:none; z-index:999;">
-Da them vao gio hang
+Đã thêm vào giỏ hàng
 </div>
 
 <?php include "includes/footer.php"; ?>
