@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include __DIR__ . '/_bootstrap.php';
 
 if (admin_is_logged_in()) {
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    $error = 'Sai ten dang nhap hoac mat khau.';
+    $error = 'Sai tên đăng nhập hoặc mật khẩu.';
 }
 ?>
 <!DOCTYPE html>
@@ -34,22 +34,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="col-md-5">
 <div class="card shadow-sm">
 <div class="card-body p-4">
-<h4 class="mb-3 text-center">Dang nhap Admin</h4>
+<h4 class="mb-3 text-center">Đăng nhập Admin</h4>
 <?php if ($error !== '') { ?>
 <div class="alert alert-danger"><?php echo e($error); ?></div>
 <?php } ?>
 <form method="POST">
 <div class="mb-3">
-<label class="form-label">Ten dang nhap</label>
+<label class="form-label">Tên đăng nhập</label>
 <input class="form-control" type="text" name="username" required>
 </div>
 <div class="mb-3">
-<label class="form-label">Mat khau</label>
+<label class="form-label">Mật khẩu</label>
 <input class="form-control" type="password" name="password" required>
 </div>
-<button class="btn btn-primary w-100" type="submit">Dang nhap</button>
+<button class="btn btn-primary w-100" type="submit">Đăng nhập</button>
 </form>
-<p class="text-muted small mt-3 mb-0">Mac dinh: admin / 123456</p>
+<p class="text-muted small mt-3 mb-0">Mặc định: admin / 123456</p>
 </div>
 </div>
 </div>

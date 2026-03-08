@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include __DIR__ . '/_bootstrap.php';
 require_admin_login();
 
@@ -39,7 +39,7 @@ $methodLabels = [
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Quan ly don hang - Admin</title>
+<title>Quản lý đơn hàng - Admin</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
@@ -48,8 +48,8 @@ $methodLabels = [
 <a class="navbar-brand" href="index.php">BookHaven Admin</a>
 <div>
 <a class="btn btn-outline-light btn-sm me-2" href="index.php">Dashboard</a>
-<a class="btn btn-outline-light btn-sm me-2" href="books.php">Sach</a>
-<a class="btn btn-outline-warning btn-sm" href="logout.php">Dang xuat</a>
+<a class="btn btn-outline-light btn-sm me-2" href="books.php">Sách</a>
+<a class="btn btn-outline-warning btn-sm" href="logout.php">Đăng xuất</a>
 </div>
 </div>
 </nav>
@@ -61,13 +61,13 @@ $methodLabels = [
 <thead class="table-dark">
 <tr>
 <th>ID</th>
-<th>Khach hang</th>
+<th>Khách hàng</th>
 <th>Email</th>
-<th>Dien thoai</th>
-<th>Thanh toan</th>
-<th>Tong tien</th>
-<th>Chi tiet</th>
-<th>Trang thai</th>
+<th>Điện thoại</th>
+<th>Thanh toán</th>
+<th>Tổng tiền</th>
+<th>Chi tiết</th>
+<th>Trạng thái</th>
 </tr>
 </thead>
 <tbody>
@@ -93,7 +93,7 @@ foreach ($statuses as $value => $label) {
 }
 ?>
 </select>
-<button class="btn btn-sm btn-success" type="submit">Luu</button>
+<button class="btn btn-sm btn-success" type="submit">Lưu</button>
 </form>
 </td>
 </tr>

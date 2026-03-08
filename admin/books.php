@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include __DIR__ . '/_bootstrap.php';
 require_admin_login();
 
@@ -29,7 +29,7 @@ function handle_image_upload($file)
 
     $imageInfo = @getimagesize($file['tmp_name']);
     if ($imageInfo === false) {
-        return ['ok' => false, 'message' => 'File upload khong phai anh hop le.'];
+        return ['ok' => false, 'message' => 'File upload khong phai anh hợp lệ.'];
     }
 
     $targetDir = realpath(__DIR__ . '/../assets/images/books');
@@ -41,7 +41,7 @@ function handle_image_upload($file)
     $targetPath = $targetDir . DIRECTORY_SEPARATOR . $newName;
 
     if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
-        return ['ok' => false, 'message' => 'Khong the luu anh upload.'];
+        return ['ok' => false, 'message' => 'Không the luu anh upload.'];
     }
 
     return ['ok' => true, 'filename' => $newName];
@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $publisher = trim($_POST['publisher'] ?? '');
 
         if ($title === '' || $author === '' || $price <= 0) {
-            $error = 'Vui long nhap day du Tieu de, Tac gia va Gia hop le.';
+            $error = 'Vui lòng nhap day du Tieu de, Tac gia va Giá hợp lệ.';
             $action = $bookId > 0 ? 'edit' : 'create';
             $id = $bookId;
         } else {
@@ -160,7 +160,7 @@ $books = mysqli_query($conn, 'SELECT id, title, author, price, category_id, imag
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Quan ly sach - Admin</title>
+<title>Quản lý sách - Admin</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
@@ -169,15 +169,15 @@ $books = mysqli_query($conn, 'SELECT id, title, author, price, category_id, imag
 <a class="navbar-brand" href="index.php">BookHaven Admin</a>
 <div>
 <a class="btn btn-outline-light btn-sm me-2" href="index.php">Dashboard</a>
-<a class="btn btn-outline-light btn-sm me-2" href="orders.php">Don hang</a>
-<a class="btn btn-outline-warning btn-sm" href="logout.php">Dang xuat</a>
+<a class="btn btn-outline-light btn-sm me-2" href="orders.php">Đơn hàng</a>
+<a class="btn btn-outline-warning btn-sm" href="logout.php">Đăng xuất</a>
 </div>
 </div>
 </nav>
 
 <div class="container py-4">
 <div class="d-flex justify-content-between align-items-center mb-3">
-<h3 class="mb-0">Quan ly sach</h3>
+<h3 class="mb-0">Quản lý sách</h3>
 <a class="btn btn-primary" href="books.php?action=create">+ Them sach</a>
 </div>
 
@@ -203,7 +203,7 @@ $books = mysqli_query($conn, 'SELECT id, title, author, price, category_id, imag
 <input type="text" name="author" class="form-control" value="<?php echo e($book['author']); ?>" required>
 </div>
 <div class="col-md-3">
-<label class="form-label">Gia (VND)</label>
+<label class="form-label">Giá (VND)</label>
 <input type="number" min="1" step="1000" name="price" class="form-control" value="<?php echo e((string)$book['price']); ?>" required>
 </div>
 <div class="col-md-3">
@@ -246,7 +246,7 @@ $books = mysqli_query($conn, 'SELECT id, title, author, price, category_id, imag
 <textarea name="description" rows="4" class="form-control"><?php echo e($book['description']); ?></textarea>
 </div>
 <div class="col-12 d-flex gap-2">
-<button class="btn btn-success" type="submit">Luu</button>
+<button class="btn btn-success" type="submit">Lưu</button>
 <a class="btn btn-secondary" href="books.php">Huy</a>
 </div>
 </form>
@@ -264,7 +264,7 @@ $books = mysqli_query($conn, 'SELECT id, title, author, price, category_id, imag
 <th>Anh</th>
 <th>Tieu de</th>
 <th>Tac gia</th>
-<th>Gia</th>
+<th>Giá</th>
 <th>Danh muc</th>
 <th>Thao tac</th>
 </tr>

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include __DIR__ . '/_bootstrap.php';
 require_admin_login();
 
@@ -43,7 +43,7 @@ $total = 0;
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Chi tiet don hang #<?php echo (int)$orderId; ?></title>
+<title>Chi tiết don hang #<?php echo (int)$orderId; ?></title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
@@ -51,13 +51,13 @@ $total = 0;
 <a href="orders.php" class="btn btn-secondary btn-sm mb-3">&larr; Quay lai danh sach don</a>
 <div class="card shadow-sm mb-3">
 <div class="card-body">
-<h4 class="mb-3">Don hang #<?php echo (int)$order['id']; ?></h4>
-<p class="mb-1"><strong>Khach hang:</strong> <?php echo e($order['name']); ?></p>
+<h4 class="mb-3">Đơn hàng #<?php echo (int)$order['id']; ?></h4>
+<p class="mb-1"><strong>Khách hàng:</strong> <?php echo e($order['name']); ?></p>
 <p class="mb-1"><strong>Email:</strong> <?php echo e($order['email']); ?></p>
-<p class="mb-1"><strong>Dien thoai:</strong> <?php echo e($order['phone']); ?></p>
-<p class="mb-1"><strong>Dia chi:</strong> <?php echo e($order['address']); ?></p>
-<p class="mb-1"><strong>Thanh toan:</strong> <?php echo e($methodLabels[$order['payment_method'] ?? 'cod'] ?? strtoupper((string)($order['payment_method'] ?? 'cod'))); ?></p>
-<p class="mb-0"><strong>Trang thai:</strong> <?php echo e((string)($order['status'] ?? 'pending')); ?></p>
+<p class="mb-1"><strong>Điện thoại:</strong> <?php echo e($order['phone']); ?></p>
+<p class="mb-1"><strong>Địa chỉ:</strong> <?php echo e($order['address']); ?></p>
+<p class="mb-1"><strong>Thanh toán:</strong> <?php echo e($methodLabels[$order['payment_method'] ?? 'cod'] ?? strtoupper((string)($order['payment_method'] ?? 'cod'))); ?></p>
+<p class="mb-0"><strong>Trạng thái:</strong> <?php echo e((string)($order['status'] ?? 'pending')); ?></p>
 </div>
 </div>
 
@@ -66,7 +66,7 @@ $total = 0;
 <h5 class="mb-3">San pham trong don</h5>
 <table class="table table-bordered">
 <thead class="table-light">
-<tr><th>Sach</th><th>Gia</th><th>So luong</th><th>Thanh tien</th></tr>
+<tr><th>Sách</th><th>Giá</th><th>Số lượng</th><th>Thành tiền</th></tr>
 </thead>
 <tbody>
 <?php while ($item = mysqli_fetch_assoc($items)) {
@@ -82,7 +82,7 @@ $total = 0;
 <?php } ?>
 </tbody>
 </table>
-<h5 class="text-end text-danger mb-0">Tong tien: <?php echo number_format($total); ?> VND</h5>
+<h5 class="text-end text-danger mb-0">Tổng tiền: <?php echo number_format($total); ?> VND</h5>
 </div>
 </div>
 </div>

@@ -28,22 +28,22 @@ if (!$book) {
 
 <div class="col-md-7">
 <h2><?php echo e($book['title']); ?></h2>
-<p class="text-muted">Tác giả: <?php echo e($book['author']); ?></p>
-<h4 class="text-danger">Giá: <?php echo number_format((float)$book['price']); ?> VND</h4>
+<p class="text-muted">TÃ¡c giáº£: <?php echo e($book['author']); ?></p>
+<h4 class="text-danger">GiÃ¡: <?php echo number_format((float)$book['price']); ?> VND</h4>
 <hr>
-<p><strong>Năm xuất bản:</strong> <?php echo e($book['publish_year']); ?></p>
-<p><strong>Ngôn ngữ:</strong> <?php echo e($book['language']); ?></p>
-<p><strong>Số trang:</strong> <?php echo e($book['pages']); ?></p>
-<p><strong>Nhà xuất bản:</strong> <?php echo e($book['publisher']); ?></p>
+<p><strong>NÄƒm xuáº¥t báº£n:</strong> <?php echo e($book['publish_year']); ?></p>
+<p><strong>NgÃ´n ngá»¯:</strong> <?php echo e($book['language']); ?></p>
+<p><strong>Sá»‘ trang:</strong> <?php echo e($book['pages']); ?></p>
+<p><strong>NhÃ  xuáº¥t báº£n:</strong> <?php echo e($book['publisher']); ?></p>
 <p class="mt-3"><?php echo nl2br(e($book['description'])); ?></p>
 
-<a href="cart/add_cart.php?id=<?php echo (int)$book['id']; ?>" class="btn btn-success">Thêm vào giỏ</a>
-<a href="index.php" class="btn btn-secondary">Quay lại</a>
+<a href="cart/add_cart.php?id=<?php echo (int)$book['id']; ?>" class="btn btn-success">ThÃªm vÃ o giá»</a>
+<a href="index.php" class="btn btn-secondary">Quay láº¡i</a>
 </div>
 </div>
 
 <hr class="mt-5">
-<h4>Sách liên quan</h4>
+<h4>SÃ¡ch liÃªn quan</h4>
 <div class="row">
 <?php
 $category = (int) $book['category_id'];
@@ -67,17 +67,17 @@ while ($row = mysqli_fetch_assoc($relatedResult)) {
 </div>
 
 <hr class="mt-5">
-<h4>Đánh giá sách</h4>
+<h4>ÄÃ¡nh giÃ¡ sÃ¡ch</h4>
 <form action="submit-review.php" method="POST">
 <input type="hidden" name="book_id" value="<?php echo (int)$book['id']; ?>">
 
 <div class="mb-3">
-<label class="form-label">Tên</label>
+<label class="form-label">TÃªn</label>
 <input type="text" name="name" class="form-control" maxlength="100" required>
 </div>
 
 <div class="mb-3">
-<label class="form-label">Đánh giá</label>
+<label class="form-label">ÄÃ¡nh giÃ¡</label>
 <select name="rating" class="form-control">
 <option value="5">5 sao</option>
 <option value="4">4 sao</option>
@@ -88,15 +88,15 @@ while ($row = mysqli_fetch_assoc($relatedResult)) {
 </div>
 
 <div class="mb-3">
-<label class="form-label">Nhận xét</label>
+<label class="form-label">Nháº­n xÃ©t</label>
 <textarea name="comment" class="form-control" maxlength="1000"></textarea>
 </div>
 
-<button class="btn btn-success" type="submit">Gửi đánh giá</button>
+<button class="btn btn-success" type="submit">Gá»­i Ä‘Ã¡nh giÃ¡</button>
 </form>
 
 <hr>
-<h5>Nhận xét</h5>
+<h5>Nháº­n xÃ©t</h5>
 <?php
 $reviewStmt = mysqli_prepare($conn, "SELECT * FROM reviews WHERE book_id = ? ORDER BY id DESC");
 mysqli_stmt_bind_param($reviewStmt, "i", $id);

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include "includes/config.php";
 
 $email = trim($_GET['email'] ?? '');
@@ -20,14 +20,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'cance
         mysqli_stmt_execute($cancelStmt);
 
         if (mysqli_stmt_affected_rows($cancelStmt) > 0) {
-            $alertMessage = 'Huy don thanh cong.';
+            $alertMessage = 'Hủy đơn thanh cong.';
             $alertType = 'success';
         } else {
-            $alertMessage = 'Khong the huy don (don da xu ly hoac thong tin khong khop).';
+            $alertMessage = 'Không the huy don (don da xu ly hoac thong tin khong khop).';
             $alertType = 'warning';
         }
     } else {
-        $alertMessage = 'Thong tin huy don khong hop le.';
+        $alertMessage = 'Thông tin huy don khong hợp lệ.';
         $alertType = 'danger';
     }
 }
@@ -65,21 +65,21 @@ if ($searched && $email !== '' && $phone !== '' && filter_var($email, FILTER_VAL
 ?>
 
 <div class="container mt-4">
-<h2 class="text-center mb-4">Tra cuu don hang</h2>
+<h2 class="text-center mb-4">Tra cứu đơn hàng</h2>
 
 <div class="card shadow-sm mb-4">
 <div class="card-body">
 <form method="GET" class="row g-3 align-items-end">
 <div class="col-md-5">
-<label class="form-label">Email dat hang</label>
+<label class="form-label">Email đặt hàng</label>
 <input type="email" name="email" class="form-control" value="<?php echo e($email); ?>" required>
 </div>
 <div class="col-md-5">
-<label class="form-label">So dien thoai</label>
+<label class="form-label">Số điện thoại</label>
 <input type="text" name="phone" class="form-control" value="<?php echo e($phone); ?>" required>
 </div>
 <div class="col-md-2 d-grid">
-<button class="btn btn-primary" type="submit">Xem don</button>
+<button class="btn btn-primary" type="submit">Xem đơn</button>
 </div>
 </form>
 </div>
@@ -90,12 +90,12 @@ if ($searched && $email !== '' && $phone !== '' && filter_var($email, FILTER_VAL
 <?php } ?>
 
 <?php if ($searched && ($email === '' || $phone === '' || !filter_var($email, FILTER_VALIDATE_EMAIL))) { ?>
-<div class="alert alert-warning">Vui long nhap dung email va so dien thoai.</div>
+<div class="alert alert-warning">Vui lòng nhap dung email va so dien thoai.</div>
 <?php } ?>
 
 <?php if ($searched && $email !== '' && $phone !== '' && filter_var($email, FILTER_VALIDATE_EMAIL)) { ?>
 <?php if (count($orders) === 0) { ?>
-<div class="alert alert-info">Khong tim thay don hang phu hop.</div>
+<div class="alert alert-info">Không tim thay don hang phu hop.</div>
 <?php } else { ?>
 <?php foreach ($orders as $order) { ?>
 <div class="card shadow-sm mb-3">
@@ -104,17 +104,17 @@ if ($searched && $email !== '' && $phone !== '' && filter_var($email, FILTER_VAL
 <h5 class="mb-0">Don #<?php echo (int)$order['id']; ?></h5>
 <span class="badge text-bg-secondary"><?php echo e($order['status'] ?? 'pending'); ?></span>
 </div>
-<p class="mb-1"><strong>Thanh toan:</strong> <?php echo e($methodLabels[$order['payment_method'] ?? 'cod'] ?? strtoupper((string)($order['payment_method'] ?? 'cod'))); ?></p>
-<p class="mb-1"><strong>Dia chi:</strong> <?php echo e($order['address']); ?></p>
-<p class="mb-2"><strong>Tong tien:</strong> <?php echo number_format((float)$order['total_amount']); ?> VND</p>
+<p class="mb-1"><strong>Thanh toán:</strong> <?php echo e($methodLabels[$order['payment_method'] ?? 'cod'] ?? strtoupper((string)($order['payment_method'] ?? 'cod'))); ?></p>
+<p class="mb-1"><strong>Địa chỉ:</strong> <?php echo e($order['address']); ?></p>
+<p class="mb-2"><strong>Tổng tiền:</strong> <?php echo number_format((float)$order['total_amount']); ?> VND</p>
 
 <?php if (($order['status'] ?? 'pending') === 'pending') { ?>
-<form method="POST" class="mb-3" onsubmit="return confirm('Ban chac chan muon huy don nay?');">
+<form method="POST" class="mb-3" onsubmit="return confirm('Bạn chắc chắn muốn hủy đơn này?');">
 <input type="hidden" name="action" value="cancel_order">
 <input type="hidden" name="order_id" value="<?php echo (int)$order['id']; ?>">
 <input type="hidden" name="email" value="<?php echo e($email); ?>">
 <input type="hidden" name="phone" value="<?php echo e($phone); ?>">
-<button type="submit" class="btn btn-outline-danger btn-sm">Huy don</button>
+<button type="submit" class="btn btn-outline-danger btn-sm">Hủy đơn</button>
 </form>
 <?php } ?>
 
@@ -122,10 +122,10 @@ if ($searched && $email !== '' && $phone !== '' && filter_var($email, FILTER_VAL
 <table class="table table-sm table-bordered mb-0">
 <thead class="table-light">
 <tr>
-<th>Sach</th>
-<th>Gia</th>
-<th>So luong</th>
-<th>Thanh tien</th>
+<th>Sách</th>
+<th>Giá</th>
+<th>Số lượng</th>
+<th>Thành tiền</th>
 </tr>
 </thead>
 <tbody>
