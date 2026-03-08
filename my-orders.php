@@ -1,11 +1,40 @@
 ﻿<?php
 include "includes/config.php";
-include "includes/header.php";
 
 $email = trim($_GET['email'] ?? '');
 $phone = trim($_GET['phone'] ?? '');
-$searched = isset($_GET['email']) || isset($_GET['phone']);
+$alertMessage = '';
+$alertType = 'info';
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'cancel_order') {
+    $orderId = (int)($_POST['order_id'] ?? 0);
+    $email = trim($_POST['email'] ?? '');
+    $phone = trim($_POST['phone'] ?? '');
+
+    if ($orderId > 0 && $email !== '' && $phone !== '' && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $cancelStmt = mysqli_prepare(
+            $conn,
+            "UPDATE orders SET status = 'cancelled' WHERE id = ? AND email = ? AND phone = ? AND status = 'pending'"
+        );
+        mysqli_stmt_bind_param($cancelStmt, 'iss', $orderId, $email, $phone);
+        mysqli_stmt_execute($cancelStmt);
+
+        if (mysqli_stmt_affected_rows($cancelStmt) > 0) {
+            $alertMessage = 'Huy don thanh cong.';
+            $alertType = 'success';
+        } else {
+            $alertMessage = 'Khong the huy don (don da xu ly hoac thong tin khong khop).';
+            $alertType = 'warning';
+        }
+    } else {
+        $alertMessage = 'Thong tin huy don khong hop le.';
+        $alertType = 'danger';
+    }
+}
+
+include "includes/header.php";
+
+$searched = isset($_GET['email']) || isset($_GET['phone']) || ($_SERVER['REQUEST_METHOD'] === 'POST' && $email !== '' && $phone !== '');
 $orders = [];
 $methodLabels = [
     'cod' => 'COD',
@@ -56,7 +85,11 @@ if ($searched && $email !== '' && $phone !== '' && filter_var($email, FILTER_VAL
 </div>
 </div>
 
-<?php if ($searched && ( $email === '' || $phone === '' || !filter_var($email, FILTER_VALIDATE_EMAIL))) { ?>
+<?php if ($alertMessage !== '') { ?>
+<div class="alert alert-<?php echo e($alertType); ?>"><?php echo e($alertMessage); ?></div>
+<?php } ?>
+
+<?php if ($searched && ($email === '' || $phone === '' || !filter_var($email, FILTER_VALIDATE_EMAIL))) { ?>
 <div class="alert alert-warning">Vui long nhap dung email va so dien thoai.</div>
 <?php } ?>
 
@@ -74,6 +107,16 @@ if ($searched && $email !== '' && $phone !== '' && filter_var($email, FILTER_VAL
 <p class="mb-1"><strong>Thanh toan:</strong> <?php echo e($methodLabels[$order['payment_method'] ?? 'cod'] ?? strtoupper((string)($order['payment_method'] ?? 'cod'))); ?></p>
 <p class="mb-1"><strong>Dia chi:</strong> <?php echo e($order['address']); ?></p>
 <p class="mb-2"><strong>Tong tien:</strong> <?php echo number_format((float)$order['total_amount']); ?> VND</p>
+
+<?php if (($order['status'] ?? 'pending') === 'pending') { ?>
+<form method="POST" class="mb-3" onsubmit="return confirm('Ban chac chan muon huy don nay?');">
+<input type="hidden" name="action" value="cancel_order">
+<input type="hidden" name="order_id" value="<?php echo (int)$order['id']; ?>">
+<input type="hidden" name="email" value="<?php echo e($email); ?>">
+<input type="hidden" name="phone" value="<?php echo e($phone); ?>">
+<button type="submit" class="btn btn-outline-danger btn-sm">Huy don</button>
+</form>
+<?php } ?>
 
 <div class="table-responsive">
 <table class="table table-sm table-bordered mb-0">
