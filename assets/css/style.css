@@ -414,3 +414,144 @@ margin-right: 6px;
 padding: 28px 0;
 }
 }
+
+/* FOOTER UPGRADE */
+.bh-footer {
+background: radial-gradient(circle at 20% 0%, #203b84 0%, #172554 42%, #0f172a 100%);
+color: #e2e8f0;
+padding: 44px 0 24px;
+}
+
+.bh-footer-top {
+margin-bottom: 10px;
+}
+
+.bh-footer-brand {
+color: #ffffff;
+font-size: 1.7rem;
+font-weight: 700;
+margin-bottom: 12px;
+}
+
+.bh-footer-desc {
+color: #cbd5e1;
+line-height: 1.65;
+margin-bottom: 14px;
+}
+
+.bh-footer-contact p {
+margin-bottom: 8px;
+color: #dbeafe;
+font-size: 0.95rem;
+}
+
+.bh-footer-contact i {
+width: 20px;
+color: #93c5fd;
+margin-right: 6px;
+}
+
+.bh-footer-title {
+font-weight: 700;
+letter-spacing: 0.2px;
+margin-bottom: 14px;
+color: #ffffff;
+}
+
+.bh-footer-links {
+list-style: none;
+padding: 0;
+margin: 0;
+}
+
+.bh-footer-links li {
+margin-bottom: 10px;
+}
+
+.bh-footer-links a {
+color: #cbd5e1;
+text-decoration: none;
+transition: color 0.2s ease, padding-left 0.2s ease;
+}
+
+.bh-footer-links a:hover {
+color: #facc15;
+padding-left: 4px;
+}
+
+.bh-working-time {
+margin-top: 10px;
+padding: 10px 12px;
+background: rgba(255, 255, 255, 0.06);
+border: 1px solid rgba(255, 255, 255, 0.1);
+border-radius: 10px;
+font-size: 0.9rem;
+}
+
+.bh-social {
+display: flex;
+gap: 10px;
+}
+
+.bh-social a {
+width: 36px;
+height: 36px;
+border-radius: 50%;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+background: rgba(255, 255, 255, 0.1);
+color: #fff;
+text-decoration: none;
+transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.bh-social a:hover {
+transform: translateY(-2px);
+background: #2563eb;
+}
+
+.bh-payment {
+display: flex;
+flex-wrap: wrap;
+gap: 10px;
+}
+
+.bh-payment img {
+width: 48px;
+height: 30px;
+object-fit: contain;
+background: #ffffff;
+padding: 4px;
+border-radius: 6px;
+}
+
+.bh-footer-divider {
+border-color: rgba(255, 255, 255, 0.18);
+margin: 18px 0 14px;
+}
+
+.bh-footer-bottom {
+display: flex;
+justify-content: space-between;
+align-items: center;
+flex-wrap: wrap;
+gap: 8px;
+font-size: 0.9rem;
+color: #cbd5e1;
+}
+
+@media (max-width: 768px) {
+.bh-footer {
+padding-top: 34px;
+}
+
+.bh-footer-brand {
+font-size: 1.5rem;
+}
+
+.bh-footer-bottom {
+flex-direction: column;
+align-items: flex-start;
+}
+}
