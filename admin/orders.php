@@ -1,10 +1,8 @@
-<?php
+﻿<?php
 include __DIR__ . '/_bootstrap.php';
 require_admin_login();
 
-$hasStatus = admin_has_order_status_column($conn);
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $hasStatus) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $orderId = (int) ($_POST['order_id'] ?? 0);
     $status = trim($_POST['status'] ?? '');
     $allowed = ['pending', 'processing', 'completed', 'cancelled'];
@@ -28,6 +26,13 @@ $query = "
     ORDER BY o.id DESC
 ";
 $orders = mysqli_query($conn, $query);
+
+$methodLabels = [
+    'cod' => 'COD',
+    'vnpay' => 'VNPay',
+    'momo' => 'MoMo',
+    'bank_transfer' => 'Chuyen khoan',
+];
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -42,7 +47,8 @@ $orders = mysqli_query($conn, $query);
 <div class="container-fluid px-4">
 <a class="navbar-brand" href="index.php">BookHaven Admin</a>
 <div>
-<a class="btn btn-outline-light btn-sm me-2" href="index.php">Dashboard</a><a class="btn btn-outline-light btn-sm me-2" href="books.php">Sach</a>
+<a class="btn btn-outline-light btn-sm me-2" href="index.php">Dashboard</a>
+<a class="btn btn-outline-light btn-sm me-2" href="books.php">Sach</a>
 <a class="btn btn-outline-warning btn-sm" href="logout.php">Dang xuat</a>
 </div>
 </div>
@@ -50,20 +56,18 @@ $orders = mysqli_query($conn, $query);
 
 <div class="container py-4">
 <h3 class="mb-3">Danh sach don hang</h3>
-<?php if (!$hasStatus) { ?>
-<div class="alert alert-info">Bang <code>orders</code> chua co cot <code>status</code>, hien tai chi xem danh sach don hang.</div>
-<?php } ?>
 <div class="table-responsive">
-<table class="table table-bordered bg-white">
+<table class="table table-bordered bg-white align-middle">
 <thead class="table-dark">
 <tr>
 <th>ID</th>
 <th>Khach hang</th>
 <th>Email</th>
 <th>Dien thoai</th>
+<th>Thanh toan</th>
 <th>Tong tien</th>
 <th>Chi tiet</th>
-<?php if ($hasStatus) { ?><th>Trang thai</th><?php } ?>
+<th>Trang thai</th>
 </tr>
 </thead>
 <tbody>
@@ -73,9 +77,9 @@ $orders = mysqli_query($conn, $query);
 <td><?php echo e($order['name']); ?></td>
 <td><?php echo e($order['email']); ?></td>
 <td><?php echo e($order['phone']); ?></td>
+<td><?php echo e($methodLabels[$order['payment_method'] ?? 'cod'] ?? strtoupper((string)($order['payment_method'] ?? 'cod'))); ?></td>
 <td><?php echo number_format((float)$order['total_amount']); ?> VND</td>
 <td><a class="btn btn-sm btn-primary" href="order-detail.php?id=<?php echo (int)$order['id']; ?>">Xem</a></td>
-<?php if ($hasStatus) { ?>
 <td>
 <form method="POST" class="d-flex gap-2">
 <input type="hidden" name="order_id" value="<?php echo (int)$order['id']; ?>">
@@ -92,7 +96,6 @@ foreach ($statuses as $value => $label) {
 <button class="btn btn-sm btn-success" type="submit">Luu</button>
 </form>
 </td>
-<?php } ?>
 </tr>
 <?php } ?>
 </tbody>

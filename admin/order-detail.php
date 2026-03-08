@@ -29,6 +29,13 @@ mysqli_stmt_bind_param($itemsStmt, "i", $orderId);
 mysqli_stmt_execute($itemsStmt);
 $items = mysqli_stmt_get_result($itemsStmt);
 
+$methodLabels = [
+    'cod' => 'COD',
+    'vnpay' => 'VNPay',
+    'momo' => 'MoMo',
+    'bank_transfer' => 'Chuyen khoan',
+];
+
 $total = 0;
 ?>
 <!DOCTYPE html>
@@ -48,7 +55,9 @@ $total = 0;
 <p class="mb-1"><strong>Khach hang:</strong> <?php echo e($order['name']); ?></p>
 <p class="mb-1"><strong>Email:</strong> <?php echo e($order['email']); ?></p>
 <p class="mb-1"><strong>Dien thoai:</strong> <?php echo e($order['phone']); ?></p>
-<p class="mb-0"><strong>Dia chi:</strong> <?php echo e($order['address']); ?></p>
+<p class="mb-1"><strong>Dia chi:</strong> <?php echo e($order['address']); ?></p>
+<p class="mb-1"><strong>Thanh toan:</strong> <?php echo e($methodLabels[$order['payment_method'] ?? 'cod'] ?? strtoupper((string)($order['payment_method'] ?? 'cod'))); ?></p>
+<p class="mb-0"><strong>Trang thai:</strong> <?php echo e((string)($order['status'] ?? 'pending')); ?></p>
 </div>
 </div>
 
