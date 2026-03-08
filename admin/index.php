@@ -26,8 +26,8 @@ $totalRevenue = (float) mysqli_fetch_assoc(mysqli_query($conn, $revenueQuery))['
 <div class="container-fluid px-4">
 <span class="navbar-brand mb-0 h1">BookHaven Admin</span>
 <div>
-<a class="btn btn-outline-light btn-sm me-2" href="orders.php">Quản lý đơn hàng</a><a class="btn btn-outline-light btn-sm me-2" href="books.php">Quản lý sách</a>
-<a class="btn btn-outline-warning btn-sm" href="logout.php">Đăng xuất</a>
+<a class="btn btn-outline-light btn-sm me-2" href="orders.php">Quan ly don hang</a><a class="btn btn-outline-light btn-sm me-2" href="books.php">Quan ly sach</a>
+<a class="btn btn-outline-warning btn-sm" href="logout.php">Dang xuat</a>
 </div>
 </div>
 </nav>
@@ -53,7 +53,7 @@ $totalRevenue = (float) mysqli_fetch_assoc(mysqli_query($conn, $revenueQuery))['
 <div class="card-body">
 <h5 class="card-title">Di nhanh khi demo</h5>
 <ul class="mb-0">
-<li>Vao <strong>Quản lý đơn hàng</strong> de xem danh sach don.</li>
+<li>Vao <strong>Quan ly don hang</strong> de xem danh sach don.</li>
 <li>Mo chi tiet don de xem san pham va tong tien.</li>
 </ul>
 </div>
