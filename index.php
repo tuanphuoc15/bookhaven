@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include "includes/config.php";
 include "includes/header.php";
 
@@ -53,16 +53,16 @@ $totalPages = max(1, (int) ceil($totalBooks / $limit));
 
 <div class="hero-banner">
 <div class="container text-center">
-<h1>Kham pha the gioi tri thuc</h1>
-<p>Hon 100+ cuon sach phat trien ban than va truyen cam hung</p>
-<a href="shop.php" class="btn btn-warning btn-lg">Kham pha ngay</a>
+<h1>Khám phá thế giới tri thức</h1>
+<p>Hơn 100+ cuốn sách phát triển bản thân và truyền cảm hứng</p>
+<a href="shop.php" class="btn btn-warning btn-lg">Khám phá ngay</a>
 </div>
 </div>
 
 <div class="container mt-4">
 <h2 class="text-center mb-4">BookHaven Online Bookstore</h2>
 
-<h3 class="text-center mt-5 mb-4">Sach ban chay</h3>
+<h3 class="text-center mt-5 mb-4">Sách bán chạy</h3>
 <div class="row">
 <?php
 $bestSellerResult = mysqli_query($conn, "SELECT * FROM books ORDER BY price DESC LIMIT 4");
@@ -70,13 +70,13 @@ while ($best = mysqli_fetch_assoc($bestSellerResult)) {
 ?>
 <div class="col-md-3">
 <div class="card shadow book-card position-relative">
-<span class="badge bg-danger bestseller-badge">Best Seller</span>
+<span class="badge bg-danger bestseller-badge">Bán chạy</span>
 <img src="assets/images/books/<?php echo e($best['image']); ?>" class="card-img-top" alt="<?php echo e($best['title']); ?>">
 <div class="card-body">
 <h6 class="card-title"><?php echo e($best['title']); ?></h6>
 <p class="text-danger fw-bold"><?php echo number_format((float)$best['price']); ?> VND</p>
-<a href="product-detail.php?id=<?php echo (int)$best['id']; ?>" class="btn btn-primary btn-sm">View</a>
-<a href="cart/add_cart.php?id=<?php echo (int)$best['id']; ?>" class="btn btn-success btn-sm">Add to Cart</a>
+<a href="product-detail.php?id=<?php echo (int)$best['id']; ?>" class="btn btn-primary btn-sm">Xem</a>
+<a href="cart/add_cart.php?id=<?php echo (int)$best['id']; ?>" class="btn btn-success btn-sm">Thêm vào giỏ</a>
 </div>
 </div>
 </div>
@@ -84,13 +84,13 @@ while ($best = mysqli_fetch_assoc($bestSellerResult)) {
 </div>
 
 <div class="mb-4 text-center">
-<a href="index.php" class="btn btn-secondary">All</a>
-<a href="index.php?category=1" class="btn btn-outline-dark">Phat trien ban than</a>
-<a href="index.php?category=2" class="btn btn-outline-dark">Tam ly hoc</a>
-<a href="index.php?category=3" class="btn btn-outline-dark">Truyen cam hung</a>
-<a href="index.php?category=4" class="btn btn-outline-dark">Ky nang song</a>
+<a href="index.php" class="btn btn-secondary">Tất cả</a>
+<a href="index.php?category=1" class="btn btn-outline-dark">Phát triển bản thân</a>
+<a href="index.php?category=2" class="btn btn-outline-dark">Tâm lý học</a>
+<a href="index.php?category=3" class="btn btn-outline-dark">Truyền cảm hứng</a>
+<a href="index.php?category=4" class="btn btn-outline-dark">Kỹ năng sống</a>
 <a href="index.php?category=5" class="btn btn-outline-dark">Kinh doanh</a>
-<a href="index.php?category=6" class="btn btn-outline-dark">Triet ly</a>
+<a href="index.php?category=6" class="btn btn-outline-dark">Triết lý</a>
 </div>
 
 <div class="row">
@@ -100,10 +100,10 @@ while ($best = mysqli_fetch_assoc($bestSellerResult)) {
 <img src="assets/images/books/<?php echo e($row['image']); ?>" class="card-img-top" style="height:250px; object-fit:cover;" alt="<?php echo e($row['title']); ?>">
 <div class="card-body">
 <h5 class="card-title"><?php echo e($row['title']); ?></h5>
-<p>Author: <?php echo e($row['author']); ?></p>
-<p class="text-danger fw-bold">Price: <?php echo number_format((float)$row['price']); ?> VND</p>
-<a href="product-detail.php?id=<?php echo (int)$row['id']; ?>" class="btn btn-primary btn-sm">View</a>
-<a href="cart/add_cart.php?id=<?php echo (int)$row['id']; ?>" onclick="showToast()" class="btn btn-success btn-sm">Add to Cart</a>
+<p>Tác giả: <?php echo e($row['author']); ?></p>
+<p class="text-danger fw-bold">Giá: <?php echo number_format((float)$row['price']); ?> VND</p>
+<a href="product-detail.php?id=<?php echo (int)$row['id']; ?>" class="btn btn-primary btn-sm">Xem</a>
+<a href="cart/add_cart.php?id=<?php echo (int)$row['id']; ?>" onclick="showToast()" class="btn btn-success btn-sm">Thêm vào giỏ</a>
 </div>
 </div>
 </div>
@@ -134,7 +134,7 @@ for ($i = 1; $i <= $totalPages; $i++) {
 </div>
 
 <div id="toast" style="position:fixed; bottom:20px; right:20px; background:#22c55e; color:white; padding:12px 20px; border-radius:6px; display:none; z-index:999;">
-Da them vao gio hang
+Đã thêm vào giỏ hàng
 </div>
 
 <?php include "includes/footer.php"; ?>

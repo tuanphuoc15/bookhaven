@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 include "includes/config.php";
 include "includes/header.php";
@@ -7,17 +7,17 @@ $isCartEmpty = empty($_SESSION['cart']);
 ?>
 
 <div class="container mt-4">
-<h2 class="text-center mb-4">Checkout</h2>
+<h2 class="text-center mb-4">Thanh toán</h2>
 
 <?php if ($isCartEmpty) { ?>
-<div class="alert alert-warning">Ban chua co san pham trong gio hang.</div>
-<div class="text-center"><a href="index.php" class="btn btn-primary">Quay lai mua hang</a></div>
+<div class="alert alert-warning">Bạn chưa có sản phẩm trong giỏ hàng.</div>
+<div class="text-center"><a href="index.php" class="btn btn-primary">Quay lại mua hàng</a></div>
 <?php } else { ?>
 <div class="row">
 <div class="col-md-6 offset-md-3">
 <form action="process-order.php" method="POST">
 <div class="mb-3">
-<label class="form-label">Name</label>
+<label class="form-label">Họ tên</label>
 <input type="text" name="name" class="form-control" maxlength="100" required>
 </div>
 
@@ -27,16 +27,16 @@ $isCartEmpty = empty($_SESSION['cart']);
 </div>
 
 <div class="mb-3">
-<label class="form-label">Phone</label>
+<label class="form-label">Số điện thoại</label>
 <input type="text" name="phone" class="form-control" maxlength="20" required>
 </div>
 
 <div class="mb-3">
-<label class="form-label">Address</label>
+<label class="form-label">Địa chỉ</label>
 <textarea name="address" class="form-control" maxlength="255" required></textarea>
 </div>
 
-<button type="submit" class="btn btn-success">Place Order</button>
+<button type="submit" class="btn btn-success">Đặt hàng</button>
 </form>
 </div>
 </div>

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 if (!isset($basePath)) {
     $basePath = "";
 }
@@ -8,31 +8,31 @@ if (!isset($basePath)) {
 <div class="row">
 <div class="col-md-4">
 <h4 class="logo">BookHaven</h4>
-<p>Website ban sach truc tuyen voi nhieu dau sach ve phat trien ban than, khoa hoc va kinh doanh.</p>
-<p>TP Ho Chi Minh, Viet Nam</p>
+<p>Website bán sách trực tuyến với nhiều đầu sách về phát triển bản thân, khoa học và kinh doanh.</p>
+<p>TP Hồ Chí Minh, Việt Nam</p>
 <p>support@bookhaven.vn</p>
 <p>1900 1234</p>
 </div>
 <div class="col-md-2">
-<h5>Dich vu</h5>
+<h5>Dịch vụ</h5>
 <ul>
-<li>Dieu khoan su dung</li>
-<li>Chinh sach bao mat</li>
-<li>Chinh sach van chuyen</li>
-<li>Chinh sach doi tra</li>
+<li>Điều khoản sử dụng</li>
+<li>Chính sách bảo mật</li>
+<li>Chính sách vận chuyển</li>
+<li>Chính sách đổi trả</li>
 </ul>
 </div>
 <div class="col-md-2">
-<h5>Ho tro</h5>
+<h5>Hỗ trợ</h5>
 <ul>
-<li>Huong dan mua hang</li>
-<li>Thanh toan</li>
-<li>Cau hoi thuong gap</li>
-<li>Lien he</li>
+<li>Hướng dẫn mua hàng</li>
+<li>Thanh toán</li>
+<li>Câu hỏi thường gặp</li>
+<li>Liên hệ</li>
 </ul>
 </div>
 <div class="col-md-2">
-<h5>Ket noi</h5>
+<h5>Kết nối</h5>
 <div class="social">
 <a href="#"><i class="fab fa-facebook"></i></a>
 <a href="#"><i class="fab fa-instagram"></i></a>
@@ -41,7 +41,7 @@ if (!isset($basePath)) {
 </div>
 </div>
 <div class="col-md-2">
-<h5>Thanh toan</h5>
+<h5>Thanh toán</h5>
 <div class="payment">
 <img src="<?php echo e($basePath); ?>assets/images/payments/visa.png" alt="Visa">
 <img src="<?php echo e($basePath); ?>assets/images/payments/mastercard.png" alt="Mastercard">

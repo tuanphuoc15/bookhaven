@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 include "../includes/config.php";
 $basePath = "../";
@@ -6,21 +6,21 @@ include "../includes/header.php";
 ?>
 
 <div class="container mt-5">
-<h2 class="mb-4">Your Cart</h2>
+<h2 class="mb-4">Giỏ hàng của bạn</h2>
 
 <?php if (empty($_SESSION['cart'])) { ?>
-<div class="alert alert-info">Gio hang cua ban dang trong.</div>
-<a href="../index.php" class="btn btn-secondary">Continue Shopping</a>
+<div class="alert alert-info">Giỏ hàng của bạn đang trống.</div>
+<a href="../index.php" class="btn btn-secondary">Tiếp tục mua hàng</a>
 <?php } else { ?>
 <table class="table table-bordered align-middle">
 <thead class="table-dark">
 <tr>
-<th>Image</th>
-<th>Book</th>
-<th>Price</th>
-<th>Quantity</th>
-<th>Total</th>
-<th>Remove</th>
+<th>Hình</th>
+<th>Sách</th>
+<th>Giá</th>
+<th>Số lượng</th>
+<th>Tổng</th>
+<th>Xóa</th>
 </tr>
 </thead>
 <tbody>
@@ -57,15 +57,15 @@ foreach ($_SESSION['cart'] as $id => $qty) {
 <a href="increase.php?id=<?php echo (int)$id; ?>" class="btn btn-sm btn-secondary">+</a>
 </td>
 <td><?php echo number_format($subtotal); ?> VND</td>
-<td><a href="remove_cart.php?id=<?php echo (int)$id; ?>" class="btn btn-danger btn-sm">Remove</a></td>
+<td><a href="remove_cart.php?id=<?php echo (int)$id; ?>" class="btn btn-danger btn-sm">Xóa</a></td>
 </tr>
 <?php } ?>
 </tbody>
 </table>
 
-<h4 class="text-end text-danger">Total: <?php echo number_format($total); ?> VND</h4>
-<a href="../checkout.php" class="btn btn-success">Checkout</a>
-<a href="../index.php" class="btn btn-secondary">Continue Shopping</a>
+<h4 class="text-end text-danger">Tổng tiền: <?php echo number_format($total); ?> VND</h4>
+<a href="../checkout.php" class="btn btn-success">Thanh toán</a>
+<a href="../index.php" class="btn btn-secondary">Tiếp tục mua hàng</a>
 <?php } ?>
 </div>
 
