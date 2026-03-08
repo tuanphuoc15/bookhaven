@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 include "includes/config.php";
 
@@ -64,7 +64,7 @@ try {
     mysqli_commit($conn);
     unset($_SESSION['cart']);
 
-    header("Location: order-success.php?method=" . urlencode($paymentMethod));
+    header("Location: order-success.php?method=" . urlencode($paymentMethod) . "&email=" . urlencode($email) . "&phone=" . urlencode($phone));
     exit();
 } catch (Throwable $e) {
     mysqli_rollback($conn);
