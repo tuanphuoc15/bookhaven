@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include "includes/config.php";
 include "includes/header.php";
 
@@ -92,10 +92,10 @@ $result = mysqli_stmt_get_result($listStmt);
 
 $flashResult = mysqli_query($conn, "SELECT id, title, author, image, price FROM books ORDER BY RAND() LIMIT 4");
 $categoriesForTabs = [
-    1 => 'Phát triển bản thân',
-    2 => 'Tâm lý học',
+    1 => 'PhÃ¡t triá»ƒn báº£n thÃ¢n',
+    2 => 'TÃ¢m lÃ½ há»c',
     5 => 'Kinh doanh',
-    6 => 'Triết lý'
+    6 => 'Triáº¿t lÃ½'
 ];
 $tabData = [];
 foreach ($categoriesForTabs as $catId => $catName) {
@@ -114,6 +114,37 @@ $reviewsSql = "
 ";
 $featuredReviews = mysqli_query($conn, $reviewsSql);
 $hasReviews = $featuredReviews && mysqli_num_rows($featuredReviews) > 0;
+
+$dateColumn = null;
+$dateCandidates = ['created_at', 'order_date', 'created_on', 'created'];
+foreach ($dateCandidates as $candidate) {
+    $colRs = mysqli_query($conn, "SHOW COLUMNS FROM orders LIKE '" . mysqli_real_escape_string($conn, $candidate) . "'");
+    if ($colRs && mysqli_num_rows($colRs) > 0) {
+        $dateColumn = $candidate;
+        break;
+    }
+}
+
+$rankTitle = 'Bảng xếp hạng bán chạy trong tuần';
+$rankWhere = " WHERE (o.status IS NULL OR o.status != 'cancelled') ";
+if ($dateColumn !== null) {
+    $rankWhere .= " AND o.`$dateColumn` >= (NOW() - INTERVAL 7 DAY) ";
+} else {
+    $rankTitle = 'Bảng xếp hạng bán chạy';
+}
+
+$rankSql = "
+  SELECT b.id, b.title, b.author, b.image, b.price, SUM(oi.quantity) AS sold_qty
+  FROM order_items oi
+  JOIN books b ON b.id = oi.book_id
+  LEFT JOIN orders o ON o.id = oi.order_id
+  $rankWhere
+  GROUP BY b.id, b.title, b.author, b.image, b.price
+  ORDER BY sold_qty DESC, b.id DESC
+  LIMIT 10
+";
+$rankResult = mysqli_query($conn, $rankSql);
+$hasRank = $rankResult && mysqli_num_rows($rankResult) > 0;
 ?>
 
 <div class="container mt-3 reveal-on-scroll">
@@ -130,9 +161,9 @@ $hasReviews = $featuredReviews && mysqli_num_rows($featuredReviews) > 0;
 
 <div class="hero-banner reveal-on-scroll">
 <div class="container text-center">
-<h1>Khám phá thế giới tri thức</h1>
-<p>Hơn 100+ cuốn sách phát triển bản thân và truyền cảm hứng</p>
-<a href="shop.php" class="btn btn-warning btn-lg">Khám phá ngay</a>
+<h1>KhÃ¡m phÃ¡ tháº¿ giá»›i tri thá»©c</h1>
+<p>HÆ¡n 100+ cuá»‘n sÃ¡ch phÃ¡t triá»ƒn báº£n thÃ¢n vÃ  truyá»n cáº£m há»©ng</p>
+<a href="shop.php" class="btn btn-warning btn-lg">KhÃ¡m phÃ¡ ngay</a>
 </div>
 </div>
 
@@ -141,7 +172,7 @@ $hasReviews = $featuredReviews && mysqli_num_rows($featuredReviews) > 0;
 
 <div class="flash-sale reveal-on-scroll mb-5">
 <div class="flash-sale-head">
-<h3 class="mb-0"><i class="fa-solid fa-bolt"></i> Flash Sale Trong Ngày</h3>
+<h3 class="mb-0"><i class="fa-solid fa-bolt"></i> Flash Sale Trong NgÃ y</h3>
 <div id="flashTimer" class="flash-timer">00:00:00</div>
 </div>
 <div class="row g-3 mt-1">
@@ -166,7 +197,7 @@ $hasReviews = $featuredReviews && mysqli_num_rows($featuredReviews) > 0;
 </div>
 </div>
 
-<h3 class="text-center mt-5 mb-4">Sách theo danh mục</h3>
+<h3 class="text-center mt-5 mb-4">SÃ¡ch theo danh má»¥c</h3>
 <ul class="nav nav-pills justify-content-center mb-3 reveal-on-scroll" id="catTabs" role="tablist">
 <?php $first = true; foreach ($categoriesForTabs as $catId => $catName) { ?>
 <li class="nav-item" role="presentation">
@@ -186,7 +217,7 @@ $hasReviews = $featuredReviews && mysqli_num_rows($featuredReviews) > 0;
 <h6 class="card-title"><?php echo e($rowCat['title']); ?></h6>
 <p class="mb-2"><?php echo e($rowCat['author']); ?></p>
 <p class="text-danger fw-bold"><?php echo number_format((float)$rowCat['price']); ?> VND</p>
-<a href="product-detail.php?id=<?php echo (int)$rowCat['id']; ?>" class="btn btn-primary btn-sm">Xem chi tiết</a>
+<a href="product-detail.php?id=<?php echo (int)$rowCat['id']; ?>" class="btn btn-primary btn-sm">Xem chi tiáº¿t</a>
 </div>
 </div>
 </div>
@@ -196,7 +227,7 @@ $hasReviews = $featuredReviews && mysqli_num_rows($featuredReviews) > 0;
 <?php $first = false; } ?>
 </div>
 
-<h3 class="text-center mt-4 mb-4">Sách bán chạy</h3>
+<h3 class="text-center mt-4 mb-4">SÃ¡ch bÃ¡n cháº¡y</h3>
 <div class="row">
 <?php
 $bestSellerResult = mysqli_query($conn, "SELECT * FROM books ORDER BY price DESC LIMIT 4");
@@ -204,15 +235,55 @@ while ($best = mysqli_fetch_assoc($bestSellerResult)) {
 ?>
 <div class="col-md-3 reveal-on-scroll">
 <div class="card shadow book-card position-relative">
-<span class="badge bg-danger bestseller-badge">Bán chạy</span>
+<span class="badge bg-danger bestseller-badge">BÃ¡n cháº¡y</span>
 <img src="assets/images/books/<?php echo e($best['image']); ?>" class="card-img-top" alt="<?php echo e($best['title']); ?>">
 <div class="card-body">
 <h6 class="card-title"><?php echo e($best['title']); ?></h6>
 <p class="text-danger fw-bold"><?php echo number_format((float)$best['price']); ?> VND</p>
 <a href="product-detail.php?id=<?php echo (int)$best['id']; ?>" class="btn btn-primary btn-sm">Xem</a>
-<a href="cart/add_cart.php?id=<?php echo (int)$best['id']; ?>" class="btn btn-success btn-sm">Thêm vào giỏ</a>
+<a href="cart/add_cart.php?id=<?php echo (int)$best['id']; ?>" class="btn btn-success btn-sm">ThÃªm vÃ o giá»</a>
 </div>
 </div>
+</div>
+<?php } ?>
+</div>
+
+<div class="weekly-rank reveal-on-scroll mt-5 mb-4">
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+<h3 class="mb-0"><?php echo e($rankTitle); ?></h3>
+<?php if ($dateColumn === null) { ?><span class="rank-note">KhÃ´ng cÃ³ cá»™t ngÃ y Ä‘áº·t hÃ ng, Ä‘ang hiá»ƒn thá»‹ theo tá»•ng Ä‘Æ¡n.</span><?php } ?>
+</div>
+<?php if (!$hasRank) { ?>
+<div class="alert alert-info mb-0">ChÆ°a cÃ³ dá»¯ liá»‡u Ä‘Æ¡n hÃ ng Ä‘á»ƒ xáº¿p háº¡ng tuáº§n nÃ y.</div>
+<?php } else { ?>
+<div class="table-responsive">
+<table class="table rank-table mb-0">
+<thead>
+<tr>
+<th>Háº¡ng</th>
+<th>SÃ¡ch</th>
+<th>TÃ¡c giáº£</th>
+<th>ÄÃ£ bÃ¡n</th>
+<th>GiÃ¡</th>
+<th>Xem</th>
+</tr>
+</thead>
+<tbody>
+<?php $rankNo = 1; while ($rk = mysqli_fetch_assoc($rankResult)) { ?>
+<tr>
+<td><span class="rank-chip rank-<?php echo $rankNo <= 3 ? $rankNo : 4; ?>">#<?php echo $rankNo; ?></span></td>
+<td class="rank-book">
+<img src="assets/images/books/<?php echo e($rk['image']); ?>" alt="<?php echo e($rk['title']); ?>">
+<span><?php echo e($rk['title']); ?></span>
+</td>
+<td><?php echo e($rk['author']); ?></td>
+<td><strong><?php echo (int)$rk['sold_qty']; ?></strong></td>
+<td><?php echo number_format((float)$rk['price']); ?> VND</td>
+<td><a class="btn btn-primary btn-sm" href="product-detail.php?id=<?php echo (int)$rk['id']; ?>">Chi tiáº¿t</a></td>
+</tr>
+<?php $rankNo++; } ?>
+</tbody>
+</table>
 </div>
 <?php } ?>
 </div>
@@ -221,41 +292,41 @@ while ($best = mysqli_fetch_assoc($bestSellerResult)) {
 <div class="card-body">
 <form method="GET" class="row g-2 align-items-end">
 <div class="col-md-3 reveal-on-scroll">
-<label class="form-label mb-1">Từ khóa</label>
-<input type="text" name="search" class="form-control" value="<?php echo e($search); ?>" placeholder="Nhập tên sách...">
+<label class="form-label mb-1">Tá»« khÃ³a</label>
+<input type="text" name="search" class="form-control" value="<?php echo e($search); ?>" placeholder="Nháº­p tÃªn sÃ¡ch...">
 </div>
 <div class="col-md-2">
-<label class="form-label mb-1">Danh mục</label>
+<label class="form-label mb-1">Danh má»¥c</label>
 <select name="category" class="form-select">
-<option value="0">Tất cả</option>
-<option value="1" <?php echo $category === 1 ? 'selected' : ''; ?>>Phát triển bản thân</option>
-<option value="2" <?php echo $category === 2 ? 'selected' : ''; ?>>Tâm lý học</option>
-<option value="3" <?php echo $category === 3 ? 'selected' : ''; ?>>Truyền cảm hứng</option>
-<option value="4" <?php echo $category === 4 ? 'selected' : ''; ?>>Kỹ năng sống</option>
+<option value="0">Táº¥t cáº£</option>
+<option value="1" <?php echo $category === 1 ? 'selected' : ''; ?>>PhÃ¡t triá»ƒn báº£n thÃ¢n</option>
+<option value="2" <?php echo $category === 2 ? 'selected' : ''; ?>>TÃ¢m lÃ½ há»c</option>
+<option value="3" <?php echo $category === 3 ? 'selected' : ''; ?>>Truyá»n cáº£m há»©ng</option>
+<option value="4" <?php echo $category === 4 ? 'selected' : ''; ?>>Ká»¹ nÄƒng sá»‘ng</option>
 <option value="5" <?php echo $category === 5 ? 'selected' : ''; ?>>Kinh doanh</option>
-<option value="6" <?php echo $category === 6 ? 'selected' : ''; ?>>Triết lý</option>
+<option value="6" <?php echo $category === 6 ? 'selected' : ''; ?>>Triáº¿t lÃ½</option>
 </select>
 </div>
 <div class="col-md-2">
-<label class="form-label mb-1">Giá từ</label>
+<label class="form-label mb-1">GiÃ¡ tá»«</label>
 <input type="number" min="0" name="min_price" class="form-control" value="<?php echo $minPrice > 0 ? (int)$minPrice : ''; ?>">
 </div>
 <div class="col-md-2">
-<label class="form-label mb-1">Giá đến</label>
+<label class="form-label mb-1">GiÃ¡ Ä‘áº¿n</label>
 <input type="number" min="0" name="max_price" class="form-control" value="<?php echo $maxPrice > 0 ? (int)$maxPrice : ''; ?>">
 </div>
 <div class="col-md-2">
-<label class="form-label mb-1">Sắp xếp</label>
+<label class="form-label mb-1">Sáº¯p xáº¿p</label>
 <select name="sort" class="form-select">
-<option value="newest" <?php echo $sort === 'newest' ? 'selected' : ''; ?>>Mới nhất</option>
-<option value="price_asc" <?php echo $sort === 'price_asc' ? 'selected' : ''; ?>>Giá tăng dần</option>
-<option value="price_desc" <?php echo $sort === 'price_desc' ? 'selected' : ''; ?>>Giá giảm dần</option>
-<option value="title_asc" <?php echo $sort === 'title_asc' ? 'selected' : ''; ?>>Tên A-Z</option>
-<option value="title_desc" <?php echo $sort === 'title_desc' ? 'selected' : ''; ?>>Tên Z-A</option>
+<option value="newest" <?php echo $sort === 'newest' ? 'selected' : ''; ?>>Má»›i nháº¥t</option>
+<option value="price_asc" <?php echo $sort === 'price_asc' ? 'selected' : ''; ?>>GiÃ¡ tÄƒng dáº§n</option>
+<option value="price_desc" <?php echo $sort === 'price_desc' ? 'selected' : ''; ?>>GiÃ¡ giáº£m dáº§n</option>
+<option value="title_asc" <?php echo $sort === 'title_asc' ? 'selected' : ''; ?>>TÃªn A-Z</option>
+<option value="title_desc" <?php echo $sort === 'title_desc' ? 'selected' : ''; ?>>TÃªn Z-A</option>
 </select>
 </div>
 <div class="col-md-1 d-grid gap-2">
-<button type="submit" class="btn btn-primary">Lọc</button>
+<button type="submit" class="btn btn-primary">Lá»c</button>
 <a href="index.php" class="btn btn-outline-secondary">Reset</a>
 </div>
 </form>
@@ -269,10 +340,10 @@ while ($best = mysqli_fetch_assoc($bestSellerResult)) {
 <img src="assets/images/books/<?php echo e($row['image']); ?>" class="card-img-top" style="height:250px; object-fit:cover;" alt="<?php echo e($row['title']); ?>">
 <div class="card-body">
 <h5 class="card-title"><?php echo e($row['title']); ?></h5>
-<p>Tác giả: <?php echo e($row['author']); ?></p>
-<p class="text-danger fw-bold">Giá: <?php echo number_format((float)$row['price']); ?> VND</p>
+<p>TÃ¡c giáº£: <?php echo e($row['author']); ?></p>
+<p class="text-danger fw-bold">GiÃ¡: <?php echo number_format((float)$row['price']); ?> VND</p>
 <a href="product-detail.php?id=<?php echo (int)$row['id']; ?>" class="btn btn-primary btn-sm">Xem</a>
-<a href="cart/add_cart.php?id=<?php echo (int)$row['id']; ?>" onclick="showToast()" class="btn btn-success btn-sm">Thêm vào giỏ</a>
+<a href="cart/add_cart.php?id=<?php echo (int)$row['id']; ?>" onclick="showToast()" class="btn btn-success btn-sm">ThÃªm vÃ o giá»</a>
 </div>
 </div>
 </div>
@@ -280,7 +351,7 @@ while ($best = mysqli_fetch_assoc($bestSellerResult)) {
 </div>
 
 <?php if ($totalBooks === 0) { ?>
-<div class="alert alert-warning">Không tìm thấy sách phù hợp bộ lọc.</div>
+<div class="alert alert-warning">KhÃ´ng tÃ¬m tháº¥y sÃ¡ch phÃ¹ há»£p bá»™ lá»c.</div>
 <?php } ?>
 
 <nav class="reveal-on-scroll">
@@ -315,9 +386,9 @@ for ($i = 1; $i <= $totalPages; $i++) {
 </nav>
 
 <div class="featured-reviews reveal-on-scroll mt-5">
-<h3 class="text-center mb-4">Đánh giá nổi bật</h3>
+<h3 class="text-center mb-4">ÄÃ¡nh giÃ¡ ná»•i báº­t</h3>
 <?php if (!$hasReviews) { ?>
-<div class="alert alert-info">Chưa có đánh giá nào. Hãy là người đầu tiên đánh giá sách!</div>
+<div class="alert alert-info">ChÆ°a cÃ³ Ä‘Ã¡nh giÃ¡ nÃ o. HÃ£y lÃ  ngÆ°á»i Ä‘áº§u tiÃªn Ä‘Ã¡nh giÃ¡ sÃ¡ch!</div>
 <?php } else { ?>
 <div class="row g-3">
 <?php while ($rv = mysqli_fetch_assoc($featuredReviews)) { ?>
@@ -327,7 +398,7 @@ for ($i = 1; $i <= $totalPages; $i++) {
 <img class="review-thumb" src="assets/images/books/<?php echo e($rv['image']); ?>" alt="<?php echo e($rv['title']); ?>">
 <div>
 <a href="product-detail.php?id=<?php echo (int)$rv['book_id']; ?>" class="review-book"><?php echo e($rv['title']); ?></a>
-<div class="review-stars"><?php echo str_repeat('★', max(1, min(5, (int)$rv['rating']))); ?></div>
+<div class="review-stars"><?php echo str_repeat('â˜…', max(1, min(5, (int)$rv['rating']))); ?></div>
 </div>
 </div>
 <p class="mb-1"><strong><?php echo e($rv['name']); ?></strong></p>
@@ -340,41 +411,41 @@ for ($i = 1; $i <= $totalPages; $i++) {
 </div>
 
 <div class="faq-home reveal-on-scroll mt-5">
-<h3 class="text-center mb-4">FAQ và Chính sách</h3>
+<h3 class="text-center mb-4">FAQ vÃ  ChÃ­nh sÃ¡ch</h3>
 <div class="accordion" id="faqHome">
 <div class="accordion-item">
 <h2 class="accordion-header" id="faqOne">
-<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqOneBody">Thời gian giao hàng bao lâu?</button>
+<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqOneBody">Thá»i gian giao hÃ ng bao lÃ¢u?</button>
 </h2>
 <div id="faqOneBody" class="accordion-collapse collapse show" data-bs-parent="#faqHome">
-<div class="accordion-body">Khu vực nội thành từ 1-2 ngày, ngoại tỉnh từ 3-5 ngày làm việc.</div>
+<div class="accordion-body">Khu vá»±c ná»™i thÃ nh tá»« 1-2 ngÃ y, ngoáº¡i tá»‰nh tá»« 3-5 ngÃ y lÃ m viá»‡c.</div>
 </div>
 </div>
 <div class="accordion-item">
 <h2 class="accordion-header" id="faqTwo">
-<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqTwoBody">Có được đổi trả không?</button>
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqTwoBody">CÃ³ Ä‘Æ°á»£c Ä‘á»•i tráº£ khÃ´ng?</button>
 </h2>
 <div id="faqTwoBody" class="accordion-collapse collapse" data-bs-parent="#faqHome">
-<div class="accordion-body">Được đổi trả trong 7 ngày nếu sách lỗi in ấn hoặc hư hại do vận chuyển.</div>
+<div class="accordion-body">ÄÆ°á»£c Ä‘á»•i tráº£ trong 7 ngÃ y náº¿u sÃ¡ch lá»—i in áº¥n hoáº·c hÆ° háº¡i do váº­n chuyá»ƒn.</div>
 </div>
 </div>
 <div class="accordion-item">
 <h2 class="accordion-header" id="faqThree">
-<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqThreeBody">Thanh toán bằng cách nào?</button>
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqThreeBody">Thanh toÃ¡n báº±ng cÃ¡ch nÃ o?</button>
 </h2>
 <div id="faqThreeBody" class="accordion-collapse collapse" data-bs-parent="#faqHome">
-<div class="accordion-body">Hỗ trợ COD, chuyển khoản ngân hàng, VNPay và MoMo.</div>
+<div class="accordion-body">Há»— trá»£ COD, chuyá»ƒn khoáº£n ngÃ¢n hÃ ng, VNPay vÃ  MoMo.</div>
 </div>
 </div>
 </div>
 <div class="text-center mt-3">
-<a class="btn btn-primary" href="policy.php">Xem đầy đủ chính sách</a>
+<a class="btn btn-primary" href="policy.php">Xem Ä‘áº§y Ä‘á»§ chÃ­nh sÃ¡ch</a>
 </div>
 </div>
 </div>
 
 <div id="toast" style="position:fixed; bottom:20px; right:20px; background:#22c55e; color:white; padding:12px 20px; border-radius:6px; display:none; z-index:999;">
-Đã thêm vào giỏ hàng
+ÄÃ£ thÃªm vÃ o giá» hÃ ng
 </div>
 
 <?php include "includes/footer.php"; ?>
