@@ -61,7 +61,6 @@ if (!isset($basePath)) {
 
 <div class="bh-footer-bottom">
 <p class="mb-0">&copy; 2026 BookHaven. Bản quyền thuộc BookHaven.</p>
-<p class="mb-0">Bản demo báo cáo môn Lập trình Web</p>
 </div>
 </div>
 </footer>

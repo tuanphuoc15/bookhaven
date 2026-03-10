@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include "includes/config.php";
 include "includes/header.php";
 
@@ -29,7 +29,7 @@ if (!$book) {
 <div class="col-md-7">
 <h2><?php echo e($book['title']); ?></h2>
 <p class="text-muted">Tác giả: <?php echo e($book['author']); ?></p>
-<h4 class="text-danger">Giá: <?php echo number_format((float)$book['price']); ?> VND</h4>
+<h4 class="text-danger">Giá: <?php echo number_format((float) $book['price']); ?> VND</h4>
 <hr>
 <p><strong>Năm xuất bản:</strong> <?php echo e($book['publish_year']); ?></p>
 <p><strong>Ngôn ngữ:</strong> <?php echo e($book['language']); ?></p>
@@ -37,7 +37,7 @@ if (!$book) {
 <p><strong>Nhà xuất bản:</strong> <?php echo e($book['publisher']); ?></p>
 <p class="mt-3"><?php echo nl2br(e($book['description'])); ?></p>
 
-<a href="cart/add_cart.php?id=<?php echo (int)$book['id']; ?>" class="btn btn-success">Thêm vào giỏ</a>
+<a href="cart/add_cart.php?id=<?php echo (int) $book['id']; ?>" class="btn btn-success">Thêm vào giỏ</a>
 <a href="index.php" class="btn btn-secondary">Quay lại</a>
 </div>
 </div>
@@ -58,8 +58,8 @@ while ($row = mysqli_fetch_assoc($relatedResult)) {
 <img src="assets/images/books/<?php echo e($row['image']); ?>" class="card-img-top" style="height:220px; object-fit:cover;" alt="<?php echo e($row['title']); ?>">
 <div class="card-body">
 <h6><?php echo e($row['title']); ?></h6>
-<p class="text-danger"><?php echo number_format((float)$row['price']); ?> VND</p>
-<a href="product-detail.php?id=<?php echo (int)$row['id']; ?>" class="btn btn-primary btn-sm">Xem</a>
+<p class="text-danger"><?php echo number_format((float) $row['price']); ?> VND</p>
+<a href="product-detail.php?id=<?php echo (int) $row['id']; ?>" class="btn btn-primary btn-sm">Xem</a>
 </div>
 </div>
 </div>
@@ -69,7 +69,7 @@ while ($row = mysqli_fetch_assoc($relatedResult)) {
 <hr class="mt-5">
 <h4>Đánh giá sách</h4>
 <form action="submit-review.php" method="POST">
-<input type="hidden" name="book_id" value="<?php echo (int)$book['id']; ?>">
+<input type="hidden" name="book_id" value="<?php echo (int) $book['id']; ?>">
 
 <div class="mb-3">
 <label class="form-label">Tên</label>
@@ -103,7 +103,7 @@ mysqli_stmt_bind_param($reviewStmt, "i", $id);
 mysqli_stmt_execute($reviewStmt);
 $reviewResult = mysqli_stmt_get_result($reviewStmt);
 while ($r = mysqli_fetch_assoc($reviewResult)) {
-    $starCount = max(1, min(5, (int)$r['rating']));
+    $starCount = max(1, min(5, (int) $r['rating']));
     echo "<p><strong>" . e($r['name']) . "</strong> " . str_repeat("*", $starCount) . "<br>" . nl2br(e($r['comment'])) . "</p><hr>";
 }
 ?>

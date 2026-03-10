@@ -1,4 +1,5 @@
 <?php
+include "includes/config.php";
 include "includes/header.php";
 
 $method = $_GET['method'] ?? 'cod';
